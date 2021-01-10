@@ -182,6 +182,7 @@ GameObject:
   - component: {fileID: 252196280}
   - component: {fileID: 252196279}
   - component: {fileID: 252196278}
+  - component: {fileID: 252196282}
   m_Layer: 0
   m_Name: Plant4
   m_TagString: Untagged
@@ -278,6 +279,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 252196276}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &252196282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252196276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &514661963
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,6 +304,7 @@ GameObject:
   - component: {fileID: 514661967}
   - component: {fileID: 514661966}
   - component: {fileID: 514661965}
+  - component: {fileID: 514661969}
   m_Layer: 0
   m_Name: Plant5
   m_TagString: Untagged
@@ -388,6 +402,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 514661963}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &514661969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514661963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &536643394
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +551,7 @@ GameObject:
   - component: {fileID: 788285259}
   - component: {fileID: 788285258}
   - component: {fileID: 788285257}
+  - component: {fileID: 788285261}
   m_Layer: 0
   m_Name: Plant2
   m_TagString: Untagged
@@ -622,6 +649,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 788285255}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &788285261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788285255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &852942964
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,6 +789,7 @@ GameObject:
   - component: {fileID: 1718017080}
   - component: {fileID: 1718017079}
   - component: {fileID: 1718017083}
+  - component: {fileID: 1718017084}
   m_Layer: 0
   m_Name: Plant1
   m_TagString: Untagged
@@ -848,6 +888,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1718017084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718017078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1913055208
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,6 +913,7 @@ GameObject:
   - component: {fileID: 1913055212}
   - component: {fileID: 1913055211}
   - component: {fileID: 1913055210}
+  - component: {fileID: 1913055214}
   m_Layer: 0
   m_Name: Plant3
   m_TagString: Untagged
@@ -957,6 +1010,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1913055208}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1913055214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913055208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1970478846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,6 +1127,7 @@ GameObject:
   - component: {fileID: 2084824239}
   - component: {fileID: 2084824238}
   - component: {fileID: 2084824237}
+  - component: {fileID: 2084824241}
   m_Layer: 0
   m_Name: Plant6
   m_TagString: Untagged
@@ -1158,3 +1224,15 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084824235}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2084824241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084824235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

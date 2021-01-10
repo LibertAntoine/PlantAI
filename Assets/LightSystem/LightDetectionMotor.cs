@@ -50,6 +50,10 @@ public class LightDetectionMotor : MonoBehaviour
             lightExposition.Add(currentCamDirection, currentLightLevel);
         }
 
+        BranchMotor branchMotor = currentPlant.GetComponent<BranchMotor>();
+        if (branchMotor) branchMotor.SetLightExposition(lightExposition);
+        else Debug.LogError("GameObject '" + currentPlant.name + "' should have BranchMotor script to manage light exposition.");
+
         StartCoroutine(ScanBranch());
     }
 
