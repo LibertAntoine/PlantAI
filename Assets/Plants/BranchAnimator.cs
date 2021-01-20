@@ -54,6 +54,8 @@ namespace PlantAI
             if (currentAnimationFrame < animationSpeed)
             {
                 mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime);
+                mesh.Refresh();
+
                 ++currentAnimationFrame;
                 return;
             }
@@ -234,7 +236,8 @@ namespace PlantAI
         void Extrude()
         {
             // Extrude the mesh.
-            mesh.Extrude(extrudable, ExtrudeMethod.FaceNormal, 0.01f);
+            var faces = mesh.Extrude(extrudable, ExtrudeMethod.FaceNormal, 0.05f);
+            Smoothing.ApplySmoothingGroups(mesh, faces, 60);
             // Apply the geometry to the mesh. TODO: check if necessary.
             mesh.ToMesh();
             // Rebuild UVs, Collisions, Tangents, etc. TODO: check if necessary.
@@ -244,7 +247,7 @@ namespace PlantAI
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            direction = new Vector3(Random.Range(-0.5f, 0.5f), 1, Random.Range(-0.5f, 0.5f));
+            direction = new Vector3(Random.Range(-0.2f, 0.2f), 1, Random.Range(-0.2f, 0.2f));
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
