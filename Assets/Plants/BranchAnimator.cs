@@ -17,8 +17,12 @@ namespace PlantAI
         // ATTRIBUTES
         // ==============================
 
-        /// <summary>Number of frames needed to complete one animation.</summary>
-        int animationSpeed = 300;
+        /// <summary>Factor of speed progession of the plant growth</summary>
+        public float growSpeedFactor = 0.3f;
+        /// <summary>Second between to extrusions.</summary>
+        public int timeIntoExtrusion = 5;
+
+
         /// <summary>Number of the current frame in the animation.</summary>
         int currentAnimationFrame = 0;
         /// <summary>Direction of the branch for the animation.</summary>
@@ -51,9 +55,9 @@ namespace PlantAI
 
         void Update()
         {
-            if (currentAnimationFrame < animationSpeed)
+            if (currentAnimationFrame < timeIntoExtrusion * 60)
             {
-                mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime);
+                mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor);
                 mesh.Refresh();
 
                 ++currentAnimationFrame;
