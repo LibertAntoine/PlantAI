@@ -21,6 +21,8 @@ namespace PlantAI
         public float growSpeedFactor = 0.3f;
         /// <summary>Time in seconds between two extrusions.</summary>
         public int timeIntoExtrusion = 5;
+        /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
+        public int remainingExtrusions = 10;
 
 
         /// <summary>Number of the current frame in the animation.</summary>
@@ -39,6 +41,9 @@ namespace PlantAI
         /// <summary>Indices of raw vertex to animate.</summary>
         List<int> rawIndicesToAnimate = new List<int>();
 
+        /// <summary>Flag for running.</summary>
+        bool running = true;
+
         // ==============================
         // UNITY METHODS
         // ==============================
@@ -55,6 +60,11 @@ namespace PlantAI
 
         void Update()
         {
+            if (!running)
+            {
+                return;
+            }
+
             if (currentAnimationFrame < timeIntoExtrusion * 60)
             {
                 mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor);
@@ -64,8 +74,17 @@ namespace PlantAI
                 return;
             }
 
+            // Reset current animation frame.
             currentAnimationFrame = 0;
-            Extrude();
+
+            if (remainingExtrusions > 0)
+            {
+                Extrude();
+                return;
+            }
+
+            // Stop running the script if max number extrusion reached.
+            running = false;
         }
 
         // ==============================
@@ -239,6 +258,9 @@ namespace PlantAI
 
         void Extrude()
         {
+            // Decrement remaining extrusions.
+            --remainingExtrusions;
+
             // Extrude the mesh.
             var faces = mesh.Extrude(extrudable, ExtrudeMethod.FaceNormal, 0.05f);
             Smoothing.ApplySmoothingGroups(mesh, faces, 60);
