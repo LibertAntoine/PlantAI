@@ -204,6 +204,7 @@ namespace PlantAI
 
             if (centerExtrudableVertex == null)
             {
+                Debug.Log(centerExtrudablePosition);
                 throw new MissingReferenceException("centerExtrudableVertex is not set.");
             }
 
@@ -288,7 +289,7 @@ namespace PlantAI
             direction.Normalize();
 
             // Add point to the branch skeleton.
-            //GetComponent<BranchMotor>().AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
+            GetComponent<BranchMotor>().AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
