@@ -251,7 +251,13 @@ namespace PlantAI
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            direction = new Vector3(Random.Range(-0.2f, 0.2f), 1, Random.Range(-0.2f, 0.2f));
+            float randomness = 0.2f;
+            direction = GetCenterExtrudableNormal() +
+                new Vector3(
+                    Random.Range(-randomness, randomness),
+                    Random.Range(-randomness, randomness),
+                    Random.Range(-randomness, randomness)
+                );
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
