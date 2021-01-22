@@ -193,7 +193,7 @@ namespace PlantAI
             for (var i = 0; i < mesh.sharedVertices.Count; ++i)
             {
                 var sharedVertex = mesh.sharedVertices[i];
-                if (GetSharedVertexPosition(sharedVertex).Equals(centerExtrudablePosition))
+                if ((GetSharedVertexPosition(sharedVertex) - centerExtrudablePosition).sqrMagnitude < 0.01f)
                 {
                     centerExtrudableVertex = sharedVertex;
                     break;
@@ -204,6 +204,9 @@ namespace PlantAI
             {
                 throw new MissingReferenceException("centerExtrudableVertex is not set.");
             }
+
+            // Move all the vertices to place the orbit point at the base.
+            mesh.TranslateVertices(mesh.faces, centerExtrudablePosition);
 
             // Get the raw vertex indices corresponding to the center point of extrudable faces.
             var centerExtrudableVertexIndices = new List<int>(GetRawIndicesFromSharedVertex(centerExtrudableVertex));
