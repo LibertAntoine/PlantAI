@@ -21,8 +21,7 @@ namespace PlantAI
         public float growSpeedFactor = 0.3f;
         /// <summary>Second between to extrusions.</summary>
         public int timeIntoExtrusion = 5;
-
-
+       
         /// <summary>Number of the current frame in the animation.</summary>
         int currentAnimationFrame = 0;
         /// <summary>Direction of the branch for the animation.</summary>
@@ -263,6 +262,8 @@ namespace PlantAI
 
                 mesh.TranslateVertices(GetRawIndicesFromSharedIndex(i), diff);
             }
+
+  
         }
     }
 }
