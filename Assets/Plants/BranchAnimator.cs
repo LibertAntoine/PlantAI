@@ -17,9 +17,9 @@ namespace PlantAI
         // ATTRIBUTES
         // ==============================
 
-        /// <summary>Factor of speed progession of the plant growth</summary>
+        /// <summary>Factor of speed progession of the plant growth.</summary>
         public float growSpeedFactor = 0.3f;
-        /// <summary>Second between to extrusions.</summary>
+        /// <summary>Time in seconds between two extrusions.</summary>
         public int timeIntoExtrusion = 5;
 
 
