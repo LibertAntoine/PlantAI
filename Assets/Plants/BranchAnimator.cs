@@ -280,6 +280,11 @@ namespace PlantAI
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness)
                 );
+            direction.Normalize();
+
+            // // Add point to the branch skeleton.
+            // GetComponent<BranchMotor>()
+            //     .AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
