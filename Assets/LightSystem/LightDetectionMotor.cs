@@ -126,13 +126,14 @@ public class LightDetectionMotor : MonoBehaviour
         lightCamera.transform.Rotate(new Vector3(0, (rotation + Mathf.PI) * Mathf.Rad2Deg, 0));
 
         // Camera viewport adaptation
-        float branchLength = currentPlant.GetComponent<MeshFilter>().mesh.bounds.size.y * currentPlant.transform.localScale.y;
+        /*
+        float branchLength = .mesh.bounds.size.y * currentPlant.transform.localScale.y;
         float branchDiameter = currentPlant.GetComponent<MeshFilter>().mesh.bounds.size.x * currentPlant.transform.localScale.x;
         lightCamera.orthographicSize = branchLength / 2.0f;
         lightCamera.rect = new Rect(1 - (branchDiameter / branchLength), 0.0f, 1.0f, 1.0f);
-
+        */
         // Get direction vector
-        currentCamDirection = currentPlant.transform.TransformPoint(new Vector3(Mathf.Sin(rotation), 0, Mathf.Cos(rotation)));
+        currentCamDirection =  currentPlant.transform.TransformPoint(new Vector3(Mathf.Sin(rotation), 0, Mathf.Cos(rotation)));
         yield return new WaitForSeconds(0f);
     }
 }

@@ -31,8 +31,11 @@ public class BranchMotor : MonoBehaviour
 
     void Update()
     {
+        //Debug.Log(lightExposition.ElementAt(1).Value);
+
+
         if (branchGrowMotor)
-            branchGrowMotor.Grow(0.0001f);
+           branchGrowMotor.Grow(0.0001f);
 
         // if light enough
         // new branch on side

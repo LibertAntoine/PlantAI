@@ -8,6 +8,7 @@ public class BranchGrowMotor : MonoBehaviour
 
     void Start()
     {
+
         transform.localScale = new Vector3(startScale, 1, startScale);
     }
 

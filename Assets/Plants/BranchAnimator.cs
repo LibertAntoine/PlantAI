@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ProBuilder;
@@ -17,11 +17,14 @@ namespace PlantAI
         // ATTRIBUTES
         // ==============================
 
-        /// <summary>Factor of speed progession of the plant growth</summary>
+        /// <summary>Factor of speed progession of the plant growth.</summary>
         public float growSpeedFactor = 0.3f;
-        /// <summary>Second between to extrusions.</summary>
+        /// <summary>Time in seconds between two extrusions.</summary>
         public int timeIntoExtrusion = 5;
-       
+        /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
+        public int remainingExtrusions = 10;
+
+
         /// <summary>Number of the current frame in the animation.</summary>
         int currentAnimationFrame = 0;
         /// <summary>Direction of the branch for the animation.</summary>
@@ -57,6 +60,7 @@ namespace PlantAI
 
         void Update()
         {
+
             if (!running)
             {
                 return;
@@ -183,6 +187,7 @@ namespace PlantAI
 
             // Get all the raw vertices.
             var allVerts = mesh.GetVertices();
+
             // Define the position where the centerExtrudableVertex should be.
             var centerExtrudablePosition = new Vector3(0, 0.5f, 0);
 
@@ -282,9 +287,8 @@ namespace PlantAI
                 );
             direction.Normalize();
 
-            // // Add point to the branch skeleton.
-            // GetComponent<BranchMotor>()
-            //     .AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
+            // Add point to the branch skeleton.
+            //GetComponent<BranchMotor>().AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
