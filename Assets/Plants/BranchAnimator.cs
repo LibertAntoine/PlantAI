@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ProBuilder;
@@ -38,6 +38,9 @@ namespace PlantAI
         /// <summary>Indices of raw vertex to animate.</summary>
         List<int> rawIndicesToAnimate = new List<int>();
 
+        /// <summary>Flag for running.</summary>
+        bool running = true;
+
         // ==============================
         // UNITY METHODS
         // ==============================
@@ -54,6 +57,11 @@ namespace PlantAI
 
         void Update()
         {
+            if (!running)
+            {
+                return;
+            }
+
             if (currentAnimationFrame < timeIntoExtrusion * 60)
             {
                 mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor);
@@ -63,8 +71,17 @@ namespace PlantAI
                 return;
             }
 
+            // Reset current animation frame.
             currentAnimationFrame = 0;
-            Extrude();
+
+            if (remainingExtrusions > 0)
+            {
+                Extrude();
+                return;
+            }
+
+            // Stop running the script if max number extrusion reached.
+            running = false;
         }
 
         // ==============================
@@ -238,6 +255,9 @@ namespace PlantAI
 
         void Extrude()
         {
+            // Decrement remaining extrusions.
+            --remainingExtrusions;
+
             // Extrude the mesh.
             var faces = mesh.Extrude(extrudable, ExtrudeMethod.FaceNormal, 0.05f);
             Smoothing.ApplySmoothingGroups(mesh, faces, 60);
@@ -250,7 +270,18 @@ namespace PlantAI
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            direction = new Vector3(Random.Range(-0.2f, 0.2f), 1, Random.Range(-0.2f, 0.2f));
+            float randomness = 0.2f;
+            direction = GetCenterExtrudableNormal() +
+                new Vector3(
+                    Random.Range(-randomness, randomness),
+                    Random.Range(-randomness, randomness),
+                    Random.Range(-randomness, randomness)
+                );
+            direction.Normalize();
+
+            // // Add point to the branch skeleton.
+            // GetComponent<BranchMotor>()
+            //     .AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
