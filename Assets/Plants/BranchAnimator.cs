@@ -209,7 +209,7 @@ namespace PlantAI
             }
 
             // Move all the vertices to place the orbit point at the base.
-            mesh.TranslateVertices(mesh.faces, centerExtrudablePosition);
+            mesh.TranslateVertices(mesh.faces, new Vector3(0, -0.3f, 0));
 
             // Get the raw vertex indices corresponding to the center point of extrudable faces.
             var centerExtrudableVertexIndices = new List<int>(GetRawIndicesFromSharedVertex(centerExtrudableVertex));
@@ -289,7 +289,8 @@ namespace PlantAI
             direction.Normalize();
 
             // Add point to the branch skeleton.
-            GetComponent<BranchMotor>().AddSkeletonPoint(GetCenterExtrudablePosition(), direction);
+             GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
+            
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)

@@ -6,7 +6,7 @@ using System.Linq;
 public class BranchMotor : MonoBehaviour
 {
     private Dictionary<Vector3, float> lightExposition;
-    private Dictionary<Vector3, Vector3> skeletonPoints;
+    private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
 
     private BranchGrowMotor branchGrowMotor;
 
@@ -23,11 +23,11 @@ public class BranchMotor : MonoBehaviour
 
     private IEnumerator NewBranch()
     {
-        yield return new WaitForSeconds(5f);
-        CreateNewChildBranch(new Vector3(1, 0, 1), new KeyValuePair<Vector3, Vector3>(transform.position, new Vector3(0,1,0)));
+        yield return new WaitForSeconds(7);
+        CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
 
     }
-
+    
 
     void Update()
     {
@@ -60,9 +60,9 @@ public class BranchMotor : MonoBehaviour
 
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
     {
-        Quaternion quat = Quaternion.FromToRotation(new Vector3(0, 1, 0), direction + new Vector3(0, 0.5f, 0));
+        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + new Vector3(0, 0.5f, 0));
         GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-        Instantiate(branch, positionAndNormal.Key, quat, transform);
+        Instantiate(branch, positionAndNormal.Key, quat, transform.parent);
     }
 
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)
