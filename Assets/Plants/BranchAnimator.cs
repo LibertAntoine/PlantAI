@@ -56,6 +56,11 @@ namespace PlantAI
             mesh = gameObject.GetComponent<ProBuilderMesh>();
             // Setup faces and indices attributes.
             SetupExtrudableFaces();
+            // Setup slice indices.
+            SetSliceIndices();
+            // Make the branch very THIN.
+            float radius = 0.05f;
+            Grow(-(0.5f - radius));
             // Extrude the mesh once.
             Extrude();
         }
@@ -353,7 +358,7 @@ namespace PlantAI
         /// or thicker (positive factor).
         /// </summary>
         /// <param name="factor">Factor of the translation.</param>
-        void Grow(float factor = 0.01f)
+        public void Grow(float factor = 0.01f)
         {
             foreach (var slice in sliceIndices)
             {
