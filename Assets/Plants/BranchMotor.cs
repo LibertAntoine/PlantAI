@@ -9,17 +9,11 @@ public class BranchMotor : MonoBehaviour
     private Dictionary<Vector3, float> lightExposition;
     private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
 
-    private BranchGrowMotor branchGrowMotor;
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
 
     void Awake()
     {
-        if (!gameObject.GetComponent<BranchMotor>())
-            Debug.LogError("GameObject '" + name + "' should have BranchGrowMotor script to manage grow expansion.");
-        else
-            branchGrowMotor = gameObject.GetComponent<BranchGrowMotor>();
-
         if (!gameObject.GetComponent<BranchColorMotor>())
             Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage grow expansion.");
         else
@@ -43,14 +37,9 @@ public class BranchMotor : MonoBehaviour
         CreateNewChildBranch();
         StartCoroutine(NewBranch());
     }
-    
 
     void Update()
     {
-
-        if (branchGrowMotor)
-           branchGrowMotor.Grow(0.0001f);
-
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
 
@@ -71,9 +60,9 @@ public class BranchMotor : MonoBehaviour
     {
         KeyValuePair<Vector3, float> mostExposedDirection;
         foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
-           if (mostExposedDirection.Value < lightDirection.Value)
+            if (mostExposedDirection.Value < lightDirection.Value)
                 mostExposedDirection = lightDirection;
-        
+
         CreateNewChildBranch(mostExposedDirection.Key);
     }
 
@@ -115,7 +104,7 @@ public class BranchMotor : MonoBehaviour
     ///// Getters /////
     public float GetGlobalLightExposition()
     {
-        if(lightExposition == null) return 100000f;
+        if (lightExposition == null) return 100000f;
         float globalExposition = 0f;
         foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
             globalExposition += lightDirection.Value;
