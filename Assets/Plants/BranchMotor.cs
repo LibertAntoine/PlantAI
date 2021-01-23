@@ -55,7 +55,10 @@ public class BranchMotor : MonoBehaviour
             branchColorMotor.UpdateColor();
 
         if (branchAnimator)
+        {
             branchAnimator.UpdateAnimation(GetGlobalLightExposition() / 100000f + 0.1f);
+            branchAnimator.Grow(0.0001f);
+        }
 
         Debug.Log(GetGlobalLightExposition());
         // if light enough
