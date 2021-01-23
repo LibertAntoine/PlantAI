@@ -8,6 +8,8 @@ public class BranchMotor : MonoBehaviour
 {
     private Dictionary<Vector3, float> lightExposition;
     private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
+    private List<uint> alreadySelectedDirections = new List<uint>();
+    private List<int> alreadySelectedSkeletonPoints = new List<int>();
 
     private BranchGrowMotor branchGrowMotor;
     private BranchColorMotor branchColorMotor;
@@ -39,7 +41,7 @@ public class BranchMotor : MonoBehaviour
     private IEnumerator NewBranch()
     {
         yield return new WaitForSeconds(7);
-        //CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
+        //
         CreateNewChildBranch();
         StartCoroutine(NewBranch());
     }
@@ -57,7 +59,7 @@ public class BranchMotor : MonoBehaviour
         if (branchAnimator)
             branchAnimator.UpdateAnimation(GetGlobalLightExposition() / 100000f + 0.1f);
 
-        Debug.Log(GetGlobalLightExposition());
+        //Debug.Log(GetGlobalLightExposition());
         // if light enough
         // new branch on side
         // 
@@ -66,22 +68,49 @@ public class BranchMotor : MonoBehaviour
 
     public void CreateNewChildBranch()
     {
-        KeyValuePair<Vector3, float> mostExposedDirection;
-        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
-           if (mostExposedDirection.Value < lightDirection.Value)
-                mostExposedDirection = lightDirection;
-        
-        CreateNewChildBranch(mostExposedDirection.Key);
+        if (lightExposition == null)
+        {
+            CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
+        } else {
+            uint index = 0;
+            uint selectedDirection = 0;
+            KeyValuePair<Vector3, float> mostExposedDirection;
+            foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition) {
+                if (mostExposedDirection.Value < lightDirection.Value && !alreadySelectedDirections.Contains(index))
+                {
+                    selectedDirection = index;
+                    mostExposedDirection = lightDirection;
+                }
+                index++;
+            }
+
+            alreadySelectedDirections.Add(selectedDirection);
+            Debug.Log(mostExposedDirection.Key);
+            CreateNewChildBranch(mostExposedDirection.Key);
+        }
     }
 
     public void CreateNewChildBranch(Vector3 direction)
     {
-        CreateNewChildBranch(direction, skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count)));
+        uint tried = 0;
+        int index = 0;
+        while(alreadySelectedSkeletonPoints.Contains(index) && tried < skeletonPoints.Count)
+        {
+            index = Random.Range(0, skeletonPoints.Count);
+            tried++;
+        }
+            
+
+        alreadySelectedSkeletonPoints.Add(index);
+
+        CreateNewChildBranch(direction, skeletonPoints.ElementAt(index));
     }
 
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
     {
-        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + new Vector3(0, 0.5f, 0));
+        Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
+
+        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
         GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
         Instantiate(branch, positionAndNormal.Key, quat, transform.parent);
     }
