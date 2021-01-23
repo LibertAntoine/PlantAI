@@ -86,6 +86,18 @@ public class BranchMotor : MonoBehaviour
         Instantiate(branch, positionAndNormal.Key, quat, transform.parent);
     }
 
+    /// <summary>
+    /// Create a branch in the continuity of
+    /// the given position and normal.
+    /// </summary>
+    /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
+    public void CreateNewChildBranchContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal)
+    {
+        Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
+        GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
+        Instantiate(branch, positionAndNormal.Key, quat, transform.parent);
+    }
+
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)
     {
         skeletonPoints.Add(position, normal);
