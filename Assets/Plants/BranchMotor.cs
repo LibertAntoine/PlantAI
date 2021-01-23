@@ -26,6 +26,7 @@ public class BranchMotor : MonoBehaviour
         yield return new WaitForSeconds(7);
         CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
 
+        StartCoroutine(NewBranch());
     }
     
 

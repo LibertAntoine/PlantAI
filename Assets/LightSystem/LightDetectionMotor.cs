@@ -47,7 +47,7 @@ public class LightDetectionMotor : MonoBehaviour
             yield return StartCoroutine(LightShot());
 
             if (debug) Debug.Log(currentLightLevel); // Debug
-            lightExposition.Add(currentCamDirection, currentLightLevel);
+            //lightExposition.Add(currentCamDirection, currentLightLevel);
         }
 
         BranchMotor branchMotor = currentPlant.GetComponent<BranchMotor>();
@@ -119,21 +119,21 @@ public class LightDetectionMotor : MonoBehaviour
     private IEnumerator MoveCamera()
     {
         // Camera Translation
-        lightCamera.transform.position = currentPlant.transform.TransformPoint(new Vector3(Mathf.Sin(rotation) * 5, 0, Mathf.Cos(rotation) * 5));
+        float ray = 5 + currentPlant.transform.localScale.x;
+        currentCamDirection = new Vector3(Mathf.Sin(rotation) * ray, 0, Mathf.Cos(rotation) * ray);
+        lightCamera.transform.position = currentPlant.transform.TransformPoint(currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.center + currentCamDirection);
 
         // Camera Rotation
         lightCamera.transform.rotation = currentPlant.transform.rotation;
         lightCamera.transform.Rotate(new Vector3(0, (rotation + Mathf.PI) * Mathf.Rad2Deg, 0));
 
         // Camera viewport adaptation
-        /*
-        float branchLength = .mesh.bounds.size.y * currentPlant.transform.localScale.y;
-        float branchDiameter = currentPlant.GetComponent<MeshFilter>().mesh.bounds.size.x * currentPlant.transform.localScale.x;
+        float branchLength = currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.size.y * currentPlant.transform.localScale.y * 1.5f;
         lightCamera.orthographicSize = branchLength / 2.0f;
+        
+        float branchDiameter = Mathf.Max(currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * currentPlant.transform.localScale.x, currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.size.z * currentPlant.transform.localScale.z);
         lightCamera.rect = new Rect(1 - (branchDiameter / branchLength), 0.0f, 1.0f, 1.0f);
-        */
-        // Get direction vector
-        currentCamDirection =  currentPlant.transform.TransformPoint(new Vector3(Mathf.Sin(rotation), 0, Mathf.Cos(rotation)));
+        
         yield return new WaitForSeconds(0f);
     }
 }
