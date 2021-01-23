@@ -298,8 +298,7 @@ namespace PlantAI
             direction.Normalize();
 
             // Add point to the branch skeleton.
-             GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
-            
+            GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
@@ -311,8 +310,6 @@ namespace PlantAI
 
                 mesh.TranslateVertices(GetRawIndicesFromSharedIndex(i), diff);
             }
-
-  
         }
     }
 }
