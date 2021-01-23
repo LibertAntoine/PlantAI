@@ -39,8 +39,8 @@ public class BranchMotor : MonoBehaviour
     private IEnumerator NewBranch()
     {
         yield return new WaitForSeconds(7);
-        CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
-
+        //CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
+        CreateNewChildBranch();
         StartCoroutine(NewBranch());
     }
     
@@ -55,8 +55,9 @@ public class BranchMotor : MonoBehaviour
             branchColorMotor.UpdateColor();
 
         if (branchAnimator)
-            branchAnimator.UpdateAnimation(1f);
+            branchAnimator.UpdateAnimation(GetGlobalLightExposition() / 100000f + 0.1f);
 
+        Debug.Log(GetGlobalLightExposition());
         // if light enough
         // new branch on side
         // 
@@ -94,5 +95,15 @@ public class BranchMotor : MonoBehaviour
     public void SetLightExposition(Dictionary<Vector3, float> exposition)
     {
         lightExposition = exposition;
+    }
+
+    ///// Getters /////
+    public float GetGlobalLightExposition()
+    {
+        if(lightExposition == null) return 100000f;
+        float globalExposition = 0f;
+        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
+            globalExposition += lightDirection.Value;
+        return globalExposition / lightExposition.Count;
     }
 }

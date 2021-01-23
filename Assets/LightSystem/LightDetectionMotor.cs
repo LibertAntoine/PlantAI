@@ -47,7 +47,7 @@ public class LightDetectionMotor : MonoBehaviour
             yield return StartCoroutine(LightShot());
 
             if (debug) Debug.Log(currentLightLevel); // Debug
-            //lightExposition.Add(currentCamDirection, currentLightLevel);
+            lightExposition.Add(currentCamDirection, currentLightLevel);
         }
 
         BranchMotor branchMotor = currentPlant.GetComponent<BranchMotor>();
