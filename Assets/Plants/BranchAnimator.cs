@@ -18,7 +18,7 @@ namespace PlantAI
         // ==============================
 
         /// <summary>Factor of speed progession of the plant growth.</summary>
-        public float growSpeedFactor = 0.3f;
+        public float growSpeedFactor = 0.1f;
         /// <summary>Time in seconds between two extrusions.</summary>
         public int timeIntoExtrusion = 5;
         /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
@@ -61,7 +61,7 @@ namespace PlantAI
         public void UpdateAnimation(float energie)
         {
 
-            if (!running)
+            if (!running || energie < 0)
             {
                 return;
             }

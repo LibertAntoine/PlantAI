@@ -9,7 +9,8 @@ public class BranchMotor : MonoBehaviour
 
 
     private float lightSeuilOfDeaph = 15000f;
-    private float lightNeedForGrowFactor = 100000f;
+    private float lightNeedForGrowFactor = 200000f;
+    private float newBranchFactor = 50000000f;
 
     private Dictionary<Vector3, float> lightExposition;
     private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
@@ -19,6 +20,11 @@ public class BranchMotor : MonoBehaviour
     private BranchGrowMotor branchGrowMotor;
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
+    public GameObject parentBranch;
+    public int generation = 0;
+
+    private float accumulateEnergie = 0;
+    private int nbChild = 0; 
 
     void Awake()
     {
@@ -55,7 +61,9 @@ public class BranchMotor : MonoBehaviour
     void Update()
     {
         float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeaph) / lightNeedForGrowFactor;
+        accumulateEnergie += Mathf.Max((GetGlobalLightExposition() - (lightSeuilOfDeaph * (nbChild + 1))), 0);
 
+        Debug.Log(accumulateEnergie);
 
         if (branchGrowMotor)
            branchGrowMotor.Grow(0.001f * growFactor);
@@ -66,10 +74,12 @@ public class BranchMotor : MonoBehaviour
         if (branchAnimator)
             branchAnimator.UpdateAnimation(growFactor);
 
-        //Debug.Log(GetGlobalLightExposition());
-        // if light enough
-        // new branch on side
-        // 
+
+        if(accumulateEnergie > newBranchFactor)
+        {
+            accumulateEnergie = 0;
+            CreateNewChildBranch();
+        }
 
     }
 
@@ -119,7 +129,9 @@ public class BranchMotor : MonoBehaviour
 
         Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
         GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-        Instantiate(branch, positionAndNormal.Key, quat, transform.parent);
+        BranchMotor childBranchMotor = Instantiate(branch, positionAndNormal.Key, quat, transform.parent).GetComponent<BranchMotor>();
+        childBranchMotor.parentBranch = gameObject;
+        childBranchMotor.generation = generation + 1;
     }
 
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)
@@ -136,7 +148,7 @@ public class BranchMotor : MonoBehaviour
     ///// Getters /////
     public float GetGlobalLightExposition()
     {
-        if(lightExposition == null) return 100000f;
+        if(lightExposition == null) return lightSeuilOfDeaph;
         float globalExposition = 0f;
         foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
             globalExposition += lightDirection.Value;

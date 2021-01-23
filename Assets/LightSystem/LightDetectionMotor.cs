@@ -119,7 +119,7 @@ public class LightDetectionMotor : MonoBehaviour
     private IEnumerator MoveCamera()
     {
         // Camera Translation
-        float ray = 5 + currentPlant.transform.localScale.x;
+        float ray = 15 + currentPlant.transform.localScale.x;
         Vector3 rotationVector = new Vector3(Mathf.Sin(rotation) * ray, 0, Mathf.Cos(rotation) * ray);
         lightCamera.transform.position = currentPlant.transform.TransformPoint(currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.center + rotationVector);
 
