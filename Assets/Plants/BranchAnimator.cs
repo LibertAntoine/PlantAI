@@ -68,7 +68,7 @@ namespace PlantAI
 
             if (currentAnimationFrame < timeIntoExtrusion * 60)
             {
-                mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * energie);
+                mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
                 mesh.Refresh();
 
                 ++currentAnimationFrame;

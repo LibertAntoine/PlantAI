@@ -6,6 +6,11 @@ using PlantAI;
 
 public class BranchMotor : MonoBehaviour
 {
+
+
+    private float lightSeuilOfDeaph = 15000f;
+    private float lightNeedForGrowFactor = 100000f;
+
     private Dictionary<Vector3, float> lightExposition;
     private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
     private List<uint> alreadySelectedDirections = new List<uint>();
@@ -35,7 +40,7 @@ public class BranchMotor : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(NewBranch());
+        //StartCoroutine(NewBranch());
     }
 
     private IEnumerator NewBranch()
@@ -49,15 +54,17 @@ public class BranchMotor : MonoBehaviour
 
     void Update()
     {
+        float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeaph) / lightNeedForGrowFactor;
+
 
         if (branchGrowMotor)
-           branchGrowMotor.Grow(0.0001f);
+           branchGrowMotor.Grow(0.001f * growFactor);
 
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
 
         if (branchAnimator)
-            branchAnimator.UpdateAnimation(GetGlobalLightExposition() / 100000f + 0.1f);
+            branchAnimator.UpdateAnimation(growFactor);
 
         //Debug.Log(GetGlobalLightExposition());
         // if light enough

@@ -16,5 +16,9 @@ public class BranchGrowMotor : MonoBehaviour
     {
         Vector3 scaleChange = new Vector3(scale, 0, scale);
         transform.localScale += scaleChange;
+        if(transform.localScale.x < startScale)
+        {
+            transform.localScale = new Vector3(startScale, transform.localScale.y, startScale);
+        }
     }
 }
