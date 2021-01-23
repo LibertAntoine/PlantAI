@@ -40,6 +40,8 @@ namespace PlantAI
         List<int> sharedIndicesToAnimate = new List<int>();
         /// <summary>Indices of raw vertex to animate.</summary>
         List<int> rawIndicesToAnimate = new List<int>();
+        /// <summary>Shared indices of each vertex per extrude slice.</summary>
+        List<List<int>> sliceIndices = new List<List<int>>();
 
         /// <summary>Flag for running.</summary>
         bool running = true;
@@ -271,6 +273,37 @@ namespace PlantAI
 
         #endregion
 
+        /// <summary>
+        /// Set the sliceIndices attribute.
+        /// Allow to get every vertex of each slice.
+        /// Useful to make the branch thicker, for instance.
+        /// </summary>
+        void SetSliceIndices()
+        {
+            int NB_VERTEX_PER_SLICE = 8;
+
+            // Clear the slice indices list.
+            sliceIndices.Clear();
+
+            // Get the number of slices in the branch.
+            // We do not take the two center faces vertices.
+            int sliceCount = (mesh.sharedVertices.Count - 2) / NB_VERTEX_PER_SLICE;
+
+            // Fill the list with lists of indices per slice.
+            for (var i = 0; i < sliceCount; ++i)
+            {
+                var slice = new List<int>();
+                for (var j = 0; j < NB_VERTEX_PER_SLICE; ++j)
+                {
+                    slice.Add(i + j * sliceCount);
+                }
+                sliceIndices.Add(slice);
+            }
+        }
+
+        /// <summary>
+        /// Extrude the branch and create a new slice.
+        /// </summary>
         void Extrude()
         {
             // Decrement remaining extrusions.
@@ -283,6 +316,9 @@ namespace PlantAI
             mesh.ToMesh();
             // Rebuild UVs, Collisions, Tangents, etc. TODO: check if necessary.
             mesh.Refresh();
+
+            // Re-set slice indices.
+            SetSliceIndices();
 
             // Reset indices to animate.
             SetupIndicesToAnimate();
