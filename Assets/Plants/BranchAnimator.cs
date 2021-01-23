@@ -347,5 +347,35 @@ namespace PlantAI
                 mesh.TranslateVertices(GetRawIndicesFromSharedIndex(i), diff);
             }
         }
+
+        /// <summary>
+        /// Make the branch become thinner (negative factor)
+        /// or thicker (positive factor).
+        /// </summary>
+        /// <param name="factor">Factor of the translation.</param>
+        void Grow(float factor = 0.01f)
+        {
+            foreach (var slice in sliceIndices)
+            {
+                // Get the center point of the slice.
+                var centerPoint = new Vector3(0, 0, 0);
+                foreach (var i in slice)
+                {
+                    centerPoint += GetSharedVertexPosition(mesh.sharedVertices[i]);
+                }
+                centerPoint /= slice.Count;
+
+                // Make the translation for each vertex of the slice
+                // towards/backwards the center point.
+                foreach (var i in slice)
+                {
+                    var direction = GetSharedVertexPosition(mesh.sharedVertices[i]) - centerPoint;
+                    direction.Normalize();
+                    var rawIndices = GetRawIndicesFromSharedIndex(i);
+
+                    mesh.TranslateVertices(rawIndices, direction * factor);
+                }
+            }
+        }
     }
 }
