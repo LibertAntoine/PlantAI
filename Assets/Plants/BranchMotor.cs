@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using PlantAI;
 
 public class BranchMotor : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class BranchMotor : MonoBehaviour
 
     private BranchGrowMotor branchGrowMotor;
     private BranchColorMotor branchColorMotor;
+    private BranchAnimator branchAnimator;
 
     void Awake()
     {
@@ -21,7 +23,12 @@ public class BranchMotor : MonoBehaviour
         if (!gameObject.GetComponent<BranchColorMotor>())
             Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage grow expansion.");
         else
-            branchColorMotor = gameObject.GetComponent<BranchColorMotor>(); 
+            branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
+
+        if (!gameObject.GetComponent<BranchAnimator>())
+            Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage grow expansion.");
+        else
+            branchAnimator = gameObject.GetComponent<BranchAnimator>();
     }
 
     void Start()
@@ -46,6 +53,9 @@ public class BranchMotor : MonoBehaviour
 
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
+
+        if (branchAnimator)
+            branchAnimator.UpdateAnimation(1f);
 
         // if light enough
         // new branch on side
