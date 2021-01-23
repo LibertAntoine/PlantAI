@@ -84,6 +84,15 @@ namespace PlantAI
                 return;
             }
 
+            // Start a new branch in the continuity.
+            GetComponent<BranchMotor>()
+                .CreateNewChildBranchContinuity(
+                    new KeyValuePair<Vector3, Vector3>(
+                        transform.TransformPoint(GetCenterExtrudablePosition()),
+                        GetCenterExtrudableNormal()
+                    )
+                );
+
             // Stop running the script if max number extrusion reached.
             running = false;
         }
