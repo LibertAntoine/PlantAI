@@ -83,11 +83,14 @@ public class BranchMotor : MonoBehaviour
     /// the given position and normal.
     /// </summary>
     /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
-    public void CreateNewChildBranchContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal)
+    /// <param name="radius">Base radius of the branch.</param>
+    public void CreateNewChildBranchContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
     {
         Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
-        GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-        Instantiate(branch, positionAndNormal.Key, quat, transform.parent);
+        GameObject branchPrefab = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
+        GameObject branch = Instantiate(branchPrefab, positionAndNormal.Key, quat, transform.parent) as GameObject;
+        // Immediately set its radius.
+        branch.GetComponent<BranchAnimator>().radius = radius;
     }
 
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)

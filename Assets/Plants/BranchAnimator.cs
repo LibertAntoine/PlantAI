@@ -97,7 +97,8 @@ namespace PlantAI
                     new KeyValuePair<Vector3, Vector3>(
                         transform.TransformPoint(GetCenterExtrudablePosition()),
                         GetCenterExtrudableNormal()
-                    )
+                    ),
+                    GetHeadSliceRadius()
                 );
 
             // Stop running the script if max number extrusion reached.
