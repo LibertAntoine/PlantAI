@@ -189,6 +189,52 @@ namespace PlantAI
             return v.normal;
         }
 
+        /// <summary>
+        /// Get the center position of one slice.
+        /// </summary>
+        /// <param name="index">Index of the slice.</param>
+        /// <returns>Position of the center point.</returns>
+        Vector3 GetCenterOfSlice(int index)
+        {
+            var slice = sliceIndices[index];
+
+            // Get the center point of the slice.
+            var centerPoint = new Vector3(0, 0, 0);
+            foreach (var i in slice)
+            {
+                centerPoint += GetSharedVertexPosition(mesh.sharedVertices[i]);
+            }
+            centerPoint /= slice.Count;
+
+            return centerPoint;
+        }
+
+        /// <summary>
+        /// Get the radius of one slice.
+        /// </summary>
+        /// <param name="index">Index of the slice.</param>
+        /// <returns>Radius of the slice.</returns>
+        float GetSliceRadius(int index)
+        {
+            var slice = sliceIndices[index];
+            var indexOfOnePoint = slice[0];
+            var center = GetCenterOfSlice(index);
+
+            return Vector3.Distance(
+                GetSharedVertexPosition(mesh.sharedVertices[indexOfOnePoint]),
+                center
+            );
+        }
+
+        /// <summary>
+        /// Get the radius of the head slice.
+        /// </summary>
+        /// <returns>Radius of the head slice.</returns>
+        float GetHeadSliceRadius()
+        {
+            return GetSliceRadius(sliceIndices.Count - 1);
+        }
+
         #endregion
 
         #region SetupMethods
