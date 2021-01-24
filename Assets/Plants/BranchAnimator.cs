@@ -65,6 +65,10 @@ namespace PlantAI
             Extrude();
         }
 
+        // ==============================
+        // PUBLIC METHODS
+        // ==============================
+
         public void UpdateAnimation(float energie)
         {
 
@@ -103,6 +107,31 @@ namespace PlantAI
 
             // Stop running the script if max number extrusion reached.
             running = false;
+        }
+
+        /// <summary>
+        /// Make the branch become thinner (negative factor)
+        /// or thicker (positive factor).
+        /// </summary>
+        /// <param name="factor">Factor of the translation.</param>
+        public void Grow(float factor = 0.01f)
+        {
+            for (var index = 0; index < sliceIndices.Count; ++index)
+            {
+                var slice = sliceIndices[index];
+                var centerPoint = GetCenterOfSlice(index);
+
+                // Make the translation for each vertex of the slice
+                // towards/backwards the center point.
+                foreach (var i in slice)
+                {
+                    var direction = GetSharedVertexPosition(mesh.sharedVertices[i]) - centerPoint;
+                    direction.Normalize();
+                    var rawIndices = GetRawIndicesFromSharedIndex(i);
+
+                    mesh.TranslateVertices(rawIndices, direction * factor);
+                }
+            }
         }
 
         // ==============================
@@ -397,31 +426,6 @@ namespace PlantAI
                 Vector3 diff = newPosition + GetCenterExtrudablePosition() - currentPosition;
 
                 mesh.TranslateVertices(GetRawIndicesFromSharedIndex(i), diff);
-            }
-        }
-
-        /// <summary>
-        /// Make the branch become thinner (negative factor)
-        /// or thicker (positive factor).
-        /// </summary>
-        /// <param name="factor">Factor of the translation.</param>
-        public void Grow(float factor = 0.01f)
-        {
-            for (var index = 0; index < sliceIndices.Count; ++index)
-            {
-                var slice = sliceIndices[index];
-                var centerPoint = GetCenterOfSlice(index);
-
-                // Make the translation for each vertex of the slice
-                // towards/backwards the center point.
-                foreach (var i in slice)
-                {
-                    var direction = GetSharedVertexPosition(mesh.sharedVertices[i]) - centerPoint;
-                    direction.Normalize();
-                    var rawIndices = GetRawIndicesFromSharedIndex(i);
-
-                    mesh.TranslateVertices(rawIndices, direction * factor);
-                }
             }
         }
     }
