@@ -406,15 +406,10 @@ namespace PlantAI
         /// <param name="factor">Factor of the translation.</param>
         public void Grow(float factor = 0.01f)
         {
-            foreach (var slice in sliceIndices)
+            for (var index = 0; index < sliceIndices.Count; ++index)
             {
-                // Get the center point of the slice.
-                var centerPoint = new Vector3(0, 0, 0);
-                foreach (var i in slice)
-                {
-                    centerPoint += GetSharedVertexPosition(mesh.sharedVertices[i]);
-                }
-                centerPoint /= slice.Count;
+                var slice = sliceIndices[index];
+                var centerPoint = GetCenterOfSlice(index);
 
                 // Make the translation for each vertex of the slice
                 // towards/backwards the center point.
