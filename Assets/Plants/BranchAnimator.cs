@@ -23,7 +23,8 @@ namespace PlantAI
         public int timeIntoExtrusion = 5;
         /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
         public int remainingExtrusions = 10;
-
+        /// <summary>Base radius of the branch.</summary>
+        public float radius = 0.05f;
 
         /// <summary>Number of the current frame in the animation.</summary>
         int currentAnimationFrame = 0;
@@ -59,7 +60,6 @@ namespace PlantAI
             // Setup slice indices.
             SetSliceIndices();
             // Make the branch very THIN.
-            float radius = 0.05f;
             Grow(-(0.5f - radius));
             // Extrude the mesh once.
             Extrude();
