@@ -19,6 +19,7 @@ public class BranchMotor : MonoBehaviour
 
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
+
     public GameObject parentBranch;
     public int generation = 0;
 
@@ -33,7 +34,7 @@ public class BranchMotor : MonoBehaviour
             branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
 
         if (!gameObject.GetComponent<BranchAnimator>())
-            Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage grow expansion.");
+            Debug.LogError("GameObject '" + name + "' should have BranchAnimator script to manage grow expansion.");
         else
             branchAnimator = gameObject.GetComponent<BranchAnimator>();
     }
@@ -53,16 +54,15 @@ public class BranchMotor : MonoBehaviour
     void Update()
     {
         float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeaph) / lightNeedForGrowFactor;
-        accumulateEnergie += Mathf.Max((GetGlobalLightExposition() - (lightSeuilOfDeaph * (nbChild + 1))), 0);
+        accumulateEnergie += Mathf.Max(GetGlobalLightExposition() - (lightSeuilOfDeaph * (nbChild + 1)), 0);
 
-        //Debug.Log(accumulateEnergie);
 
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
 
         if (branchAnimator)
             branchAnimator.UpdateAnimation(growFactor);
-            branchAnimator.Grow(0.001f * growFactor);
+            branchAnimator.Grow(0.0001f * growFactor);
 
         if (accumulateEnergie > newBranchFactor)
         {
@@ -117,11 +117,13 @@ public class BranchMotor : MonoBehaviour
 
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
     {
+
         Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
 
         Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
         GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-        BranchMotor childBranchMotor = Instantiate(branch, positionAndNormal.Key, quat, transform.parent).GetComponent<BranchMotor>();
+        BranchMotor childBranchMotor = Instantiate(branch, positionAndNormal.Key, quat, transform).GetComponent<BranchMotor>();
+        //childBranchMotor.GetComponent<BranchAnimator>().radius = 1;
         childBranchMotor.parentBranch = gameObject;
         childBranchMotor.generation = generation + 1;
     }
@@ -135,9 +137,13 @@ public class BranchMotor : MonoBehaviour
     /// <param name="radius">Base radius of the branch.</param>
     public void CreateNewChildBranchContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
     {
+        Debug.Log("hello");
+        Debug.Log(radius);
+        Debug.Log(positionAndNormal);
+
         Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
         GameObject branchPrefab = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-        GameObject branch = Instantiate(branchPrefab, positionAndNormal.Key, quat, transform.parent);
+        GameObject branch = Instantiate(branchPrefab, positionAndNormal.Key, quat, transform);
         // Immediately set its radius.
         branch.GetComponent<BranchAnimator>().radius = radius;
     }

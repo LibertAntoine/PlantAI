@@ -26,8 +26,6 @@ namespace PlantAI
         /// <summary>Base radius of the branch.</summary>
         public float radius = 0.05f;
 
-        /// <summary>Number of the current frame in the animation.</summary>
-        int currentAnimationFrame = 0;
         /// <summary>Direction of the branch for the animation.</summary>
         Vector3 direction = Vector3.up;
 
@@ -46,6 +44,9 @@ namespace PlantAI
 
         /// <summary>Flag for running.</summary>
         bool running = true;
+
+        double croissance = 0;
+        double croissanceLimitperExtrude = 0.3;
 
         // ==============================
         // UNITY METHODS
@@ -72,41 +73,46 @@ namespace PlantAI
         public void UpdateAnimation(float energie)
         {
 
-            if (!running)
+            if (!running || energie < 0)
             {
                 return;
             }
 
-            if (currentAnimationFrame < timeIntoExtrusion * 60)
+            croissance += Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
+            mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
+            mesh.Refresh();
+
+            Debug.Log(croissance);
+
+            if (croissance > croissanceLimitperExtrude)
             {
-                mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * energie);
-                mesh.Refresh();
+          
+                // Add point to the branch skeleton.
+                //GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                //sphere.transform.position = transform.TransformPoint(GetCenterExtrudablePosition());
 
-                ++currentAnimationFrame;
-                return;
-            }
+                GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
+                croissance = 0;
 
-            // Reset current animation frame.
-            currentAnimationFrame = 0;
+                if (remainingExtrusions > 0)
+                {
+                    Extrude();
+                } else
+                {
+                    // Start a new branch in the continuity.
+                    GetComponent<BranchMotor>().
+                        CreateNewChildBranchContinuity(
+                            new KeyValuePair<Vector3, Vector3>(
+                                transform.TransformPoint(GetCenterExtrudablePosition()),
+                                GetCenterExtrudableNormal()
+                            ),
+                            GetHeadSliceRadius()
+                        );
 
-            if (remainingExtrusions > 0)
-            {
-                Extrude();
-                return;
-            }
-
-            // Start a new branch in the continuity.
-            GetComponent<BranchMotor>().
-                CreateNewChildBranchContinuity(
-                    new KeyValuePair<Vector3, Vector3>(
-                        transform.TransformPoint(GetCenterExtrudablePosition()),
-                        GetCenterExtrudableNormal()
-                    ),
-                    GetHeadSliceRadius()
-                );
-
-            // Stop running the script if max number extrusion reached.
-            running = false;
+                    // Stop running the script if max number extrusion reached.
+                    running = false;
+                }
+            }    
         }
 
         /// <summary>
@@ -413,9 +419,6 @@ namespace PlantAI
                     Random.Range(-randomness, randomness)
                 );
             direction.Normalize();
-
-            // Add point to the branch skeleton.
-            GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
