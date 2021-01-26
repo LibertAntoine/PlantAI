@@ -61,8 +61,10 @@ public class BranchMotor : MonoBehaviour
             branchColorMotor.UpdateColor();
 
         if (branchAnimator)
+        {
             branchAnimator.UpdateAnimation(growFactor);
             branchAnimator.Grow(0.0001f * growFactor);
+        }
 
         if (accumulateEnergie > newBranchFactor)
         {
@@ -123,9 +125,10 @@ public class BranchMotor : MonoBehaviour
         Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
         GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
         BranchMotor childBranchMotor = Instantiate(branch, positionAndNormal.Key, quat, transform).GetComponent<BranchMotor>();
-        //childBranchMotor.GetComponent<BranchAnimator>().radius = 1;
         childBranchMotor.parentBranch = gameObject;
         childBranchMotor.generation = generation + 1;
+
+
     }
 
 
@@ -137,10 +140,6 @@ public class BranchMotor : MonoBehaviour
     /// <param name="radius">Base radius of the branch.</param>
     public void CreateNewChildBranchContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
     {
-        Debug.Log("hello");
-        Debug.Log(radius);
-        Debug.Log(positionAndNormal);
-
         Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
         GameObject branchPrefab = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
         GameObject branch = Instantiate(branchPrefab, positionAndNormal.Key, quat, transform);
@@ -148,11 +147,36 @@ public class BranchMotor : MonoBehaviour
         branch.GetComponent<BranchAnimator>().radius = radius;
     }
 
+    public void CreateNewLeaf()
+    {
+        KeyValuePair<Vector3, Vector3> positionAndNormal = skeletonPoints.ElementAt(skeletonPoints.Count - 1);
 
+        int index = 0;
+        int selectedDirection = 0;
+        KeyValuePair<Vector3, float> mostExposedDirection;
+        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
+        {
+            if (mostExposedDirection.Value < lightDirection.Value && !alreadySelectedDirections.Contains((uint)index))
+            {
+                selectedDirection = index;
+                mostExposedDirection = lightDirection;
+            }
+            index++;
+        }
+
+        Vector3 direction = lightExposition.ElementAt(selectedDirection).Key;
+        Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
+
+        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
+        GameObject leaf = (GameObject)Resources.Load("Prefabs/Leave_a_02", typeof(GameObject));
+        
+        Instantiate(leaf, positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform).transform.localScale *= 3;
+    }
 
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)
     {
         skeletonPoints.Add(position, normal);
+        CreateNewLeaf();
     }
 
     ///// Setters /////
