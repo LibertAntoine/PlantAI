@@ -40,6 +40,8 @@ public class BranchMotor : MonoBehaviour
 
     void Update()
     {
+
+
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
 
@@ -49,10 +51,7 @@ public class BranchMotor : MonoBehaviour
             branchAnimator.Grow(0.0001f);
         }
 
-        Debug.Log(GetGlobalLightExposition());
-        // if light enough
-        // new branch on side
-        // 
+        //Debug.Log(GetGlobalLightExposition());
 
     }
 
@@ -65,11 +64,15 @@ public class BranchMotor : MonoBehaviour
 
         CreateNewChildBranch(mostExposedDirection.Key);
     }
-
     public void CreateNewChildBranch(Vector3 direction)
     {
         CreateNewChildBranch(direction, skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count)));
     }
+
+
+
+
+
 
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
     {
