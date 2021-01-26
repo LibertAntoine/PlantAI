@@ -96,8 +96,8 @@ namespace PlantAI
             }
 
             // Start a new branch in the continuity.
-            GetComponent<BranchMotor>()
-                .CreateNewChildBranchContinuity(
+            GetComponent<BranchMotor>().
+                CreateNewChildBranchContinuity(
                     new KeyValuePair<Vector3, Vector3>(
                         transform.TransformPoint(GetCenterExtrudablePosition()),
                         GetCenterExtrudableNormal()
