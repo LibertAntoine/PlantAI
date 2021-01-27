@@ -14,8 +14,6 @@ public class BranchMotor : MonoBehaviour
 
     private Dictionary<Vector3, float> lightExposition;
     private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
-    private List<uint> alreadySelectedDirections = new List<uint>();
-    private List<int> alreadySelectedSkeletonPoints = new List<int>();
 
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
@@ -24,7 +22,7 @@ public class BranchMotor : MonoBehaviour
     public int generation = 0;
 
     private float accumulateEnergie = 0;
-    private int nbChild = 0;
+    private bool haveChilds = false;
 
     void Awake()
     {
@@ -41,20 +39,15 @@ public class BranchMotor : MonoBehaviour
 
     void Start()
     {
-        //StartCoroutine(NewBranch());
-    }
-    private IEnumerator NewBranch()
-    {
-        yield return new WaitForSeconds(7);
-        //
-        CreateNewChildBranch();
-        StartCoroutine(NewBranch());
+   
     }
 
     void Update()
     {
         float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeaph) / lightNeedForGrowFactor;
-        accumulateEnergie += Mathf.Max(GetGlobalLightExposition() - (lightSeuilOfDeaph * (nbChild + 1)), 0);
+        accumulateEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeaph, 0);
+
+        //Debug.Log(accumulateEnergie);
 
 
         if (branchColorMotor)
@@ -63,58 +56,15 @@ public class BranchMotor : MonoBehaviour
         if (branchAnimator)
         {
             branchAnimator.UpdateAnimation(growFactor);
-            branchAnimator.Grow(0.0001f * growFactor);
+            branchAnimator.Grow(0.0005f * growFactor);
         }
 
-        if (accumulateEnergie > newBranchFactor)
+        if (accumulateEnergie > newBranchFactor && !haveChilds)
         {
-            accumulateEnergie = 0;
-            CreateNewChildBranch();
+            haveChilds = true;
+            CreateNewChildBranch(giveMostExposedDirection(), giveRandomSkeletonPoint());
         }
 
-    }
-
-    public void CreateNewChildBranch()
-    {
-        if (lightExposition == null)
-        {
-            CreateNewChildBranch(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)));
-        }
-        else
-        {
-            uint index = 0;
-            uint selectedDirection = 0;
-            KeyValuePair<Vector3, float> mostExposedDirection;
-            foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
-            {
-                if (mostExposedDirection.Value < lightDirection.Value && !alreadySelectedDirections.Contains(index))
-                {
-                    selectedDirection = index;
-                    mostExposedDirection = lightDirection;
-                }
-                index++;
-            }
-
-            alreadySelectedDirections.Add(selectedDirection);
-            Debug.Log(mostExposedDirection.Key);
-            CreateNewChildBranch(mostExposedDirection.Key);
-        }
-    }
-
-    public void CreateNewChildBranch(Vector3 direction)
-    {
-        uint tried = 0;
-        int index = 0;
-        while (alreadySelectedSkeletonPoints.Contains(index) && tried < skeletonPoints.Count)
-        {
-            index = Random.Range(0, skeletonPoints.Count);
-            tried++;
-        }
-
-
-        alreadySelectedSkeletonPoints.Add(index);
-
-        CreateNewChildBranch(direction, skeletonPoints.ElementAt(index));
     }
 
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
@@ -130,7 +80,6 @@ public class BranchMotor : MonoBehaviour
 
 
     }
-
 
     /// <summary>
     /// Create a branch in the continuity of
@@ -150,24 +99,9 @@ public class BranchMotor : MonoBehaviour
     public void CreateNewLeaf()
     {
         KeyValuePair<Vector3, Vector3> positionAndNormal = skeletonPoints.ElementAt(skeletonPoints.Count - 1);
+        Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
 
-        int index = 0;
-        int selectedDirection = 0;
-        KeyValuePair<Vector3, float> mostExposedDirection;
-        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
-        {
-            if (mostExposedDirection.Value < lightDirection.Value && !alreadySelectedDirections.Contains((uint)index))
-            {
-                selectedDirection = index;
-                mostExposedDirection = lightDirection;
-            }
-            index++;
-        }
-
-        Vector3 direction = lightExposition.ElementAt(selectedDirection).Key;
-        Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
-
-        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
+        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, giveMostExposedDirection() + RandomInfluenceDirection);
         GameObject leaf = (GameObject)Resources.Load("Prefabs/Leave_a_02", typeof(GameObject));
         
         Instantiate(leaf, positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform).transform.localScale *= 3;
@@ -177,6 +111,26 @@ public class BranchMotor : MonoBehaviour
     {
         skeletonPoints.Add(position, normal);
         CreateNewLeaf();
+    }
+
+    private Vector3 giveMostExposedDirection()
+    {
+        if (lightExposition == null) return new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+
+        KeyValuePair<Vector3, float> mostExposedDirection;
+        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
+        {
+            if (mostExposedDirection.Value < lightDirection.Value)
+            {
+                mostExposedDirection = lightDirection;
+            }
+        }
+        return mostExposedDirection.Key;
+    }
+
+    private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()
+    {
+        return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count));
     }
 
     ///// Setters /////
