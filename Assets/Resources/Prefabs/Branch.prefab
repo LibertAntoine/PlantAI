@@ -906,8 +906,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentBranch: {fileID: 0}
-  parentLeaf: {fileID: 0}
   generation: 0
 --- !u!114 &1337405566
 MonoBehaviour:

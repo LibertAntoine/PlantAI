@@ -134,6 +134,7 @@ public class LightDetectionMotor : MonoBehaviour
         float branchDiameter = Mathf.Max(currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * currentPlant.transform.localScale.x, currentPlant.GetComponent<MeshFilter>().sharedMesh.bounds.size.z * currentPlant.transform.localScale.z);
         lightCamera.rect = new Rect(1 - (branchDiameter / branchLength), 0.0f, 1.0f, 1.0f);
 
+
         currentCamDirection = new Vector3(Mathf.Sin(rotation), 0, Mathf.Cos(rotation));
         yield return new WaitForSeconds(0f);
     }

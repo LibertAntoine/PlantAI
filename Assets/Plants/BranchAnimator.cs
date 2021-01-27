@@ -18,7 +18,7 @@ namespace PlantAI
         // ==============================
 
         /// <summary>Factor of speed progession of the plant growth.</summary>
-        public float growSpeedFactor = 0.3f;
+        public float growSpeedFactor = 0.15f;
         /// <summary>Time in seconds between two extrusions.</summary>
         public int timeIntoExtrusion = 5;
         /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
@@ -80,9 +80,9 @@ namespace PlantAI
 
             croissance += Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
             mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
+            mesh.TranslateVerticesInWorldSpace(rawIndicesToAnimate.ToArray(), Vector3.up * 2 * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
             mesh.Refresh();
 
-            Debug.Log(croissance);
 
             if (croissance > croissanceLimitperExtrude)
             {
@@ -99,6 +99,7 @@ namespace PlantAI
                     Extrude();
                 } else
                 {
+                    
                     // Start a new branch in the continuity.
                     GetComponent<BranchMotor>().
                         CreateNewChildBranchContinuity(
@@ -108,7 +109,7 @@ namespace PlantAI
                             ),
                             GetHeadSliceRadius()
                         );
-
+                    
                     // Stop running the script if max number extrusion reached.
                     running = false;
                 }
@@ -416,14 +417,17 @@ namespace PlantAI
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            float randomness = 0.2f;
+            float randomness = 0.8f;
+
             direction = GetCenterExtrudableNormal() +
                 new Vector3(
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness)
                 );
-            direction.Normalize();
+            //direction.Normalize();
+
+
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
