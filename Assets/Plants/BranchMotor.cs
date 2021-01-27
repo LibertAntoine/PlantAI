@@ -10,7 +10,7 @@ public class BranchMotor : MonoBehaviour
 
     private float lightSeuilOfDeaph = 15000f;
     private float lightNeedForGrowFactor = 200000f;
-    private float newBranchFactor = 50000000f;
+    private float newBranchFactor = 40000000f;
 
     private Dictionary<Vector3, float> lightExposition;
     private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
@@ -18,11 +18,11 @@ public class BranchMotor : MonoBehaviour
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
 
-    public GameObject parentBranch;
     public int generation = 0;
 
     private float accumulateEnergie = 0;
     private bool haveChilds = false;
+    private int numberChildBranch = 3;
 
     void Awake()
     {
@@ -47,8 +47,6 @@ public class BranchMotor : MonoBehaviour
         float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeaph) / lightNeedForGrowFactor;
         accumulateEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeaph, 0);
 
-        //Debug.Log(accumulateEnergie);
-
 
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
@@ -56,7 +54,7 @@ public class BranchMotor : MonoBehaviour
         if (branchAnimator)
         {
             branchAnimator.UpdateAnimation(growFactor);
-            branchAnimator.Grow(0.0005f * growFactor);
+            branchAnimator.Grow(0.0002f * growFactor);
         }
 
         if (accumulateEnergie > newBranchFactor && !haveChilds)
@@ -69,16 +67,17 @@ public class BranchMotor : MonoBehaviour
 
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
     {
+        //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
 
-        Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
-
-        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, direction + RandomInfluenceDirection);
-        GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-        BranchMotor childBranchMotor = Instantiate(branch, positionAndNormal.Key, quat, transform).GetComponent<BranchMotor>();
-        childBranchMotor.parentBranch = gameObject;
-        childBranchMotor.generation = generation + 1;
-
-
+        for(int i = 0; i < numberChildBranch; i++)
+        {
+            float rotation = (2 * Mathf.PI / numberChildBranch) * i;
+            GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
+            GameObject instance = Instantiate(branch, positionAndNormal.Key, Quaternion.identity, transform);
+            instance.GetComponent<BranchMotor>().generation = generation + 1;
+            instance.transform.localRotation = Quaternion.Euler(Mathf.Sin(rotation) * Mathf.Rad2Deg, 0, Mathf.Cos(rotation) * Mathf.Rad2Deg);
+           
+        }
     }
 
     /// <summary>
@@ -89,7 +88,8 @@ public class BranchMotor : MonoBehaviour
     /// <param name="radius">Base radius of the branch.</param>
     public void CreateNewChildBranchContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
     {
-        Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
+
+        Quaternion quat = Quaternion.FromToRotation(Vector3.up, transform.rotation * positionAndNormal.Value);
         GameObject branchPrefab = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
         GameObject branch = Instantiate(branchPrefab, positionAndNormal.Key, quat, transform);
         // Immediately set its radius.
@@ -101,14 +101,16 @@ public class BranchMotor : MonoBehaviour
         KeyValuePair<Vector3, Vector3> positionAndNormal = skeletonPoints.ElementAt(skeletonPoints.Count - 1);
         Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
 
-        Quaternion quat = Quaternion.FromToRotation(positionAndNormal.Value, giveMostExposedDirection() + RandomInfluenceDirection);
-        GameObject leaf = (GameObject)Resources.Load("Prefabs/Leave_a_02", typeof(GameObject));
-        
-        Instantiate(leaf, positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform).transform.localScale *= 3;
+        Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
+        Quaternion quat2 = Quaternion.FromToRotation(positionAndNormal.Value, transform.InverseTransformDirection(giveMostExposedDirection()));
+        GameObject leaf = Instantiate((GameObject)Resources.Load("Prefabs/Leave", typeof(GameObject)), positionAndNormal.Key, quat * quat2, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
+        leaf.transform.localScale *= 3;
+
     }
 
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)
     {
+        normal = transform.rotation * normal;
         skeletonPoints.Add(position, normal);
         CreateNewLeaf();
     }
@@ -130,7 +132,9 @@ public class BranchMotor : MonoBehaviour
 
     private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()
     {
-        return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count));
+ 
+
+        return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count - 1));
     }
 
     ///// Setters /////
@@ -142,7 +146,7 @@ public class BranchMotor : MonoBehaviour
     ///// Getters /////
     public float GetGlobalLightExposition()
     {
-        if (lightExposition == null) return lightSeuilOfDeaph;
+        if (lightExposition == null) { return lightSeuilOfDeaph;}
         float globalExposition = 0f;
         foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
             globalExposition += lightDirection.Value;
