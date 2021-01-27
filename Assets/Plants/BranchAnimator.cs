@@ -102,7 +102,7 @@ namespace PlantAI
                     
                     // Start a new branch in the continuity.
                     GetComponent<BranchMotor>().
-                        CreateNewChildBranchContinuity(
+                        CreateNewChildInContinuity(
                             new KeyValuePair<Vector3, Vector3>(
                                 transform.TransformPoint(GetCenterExtrudablePosition()),
                                 GetCenterExtrudableNormal()
@@ -417,7 +417,7 @@ namespace PlantAI
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            float randomness = 0.8f;
+            float randomness = 0.6f;
 
             direction = GetCenterExtrudableNormal() +
                 new Vector3(
@@ -425,7 +425,7 @@ namespace PlantAI
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness)
                 );
-            //direction.Normalize();
+            direction.Normalize();
 
 
 
