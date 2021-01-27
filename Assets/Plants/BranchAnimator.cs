@@ -18,15 +18,14 @@ namespace PlantAI
         // ==============================
 
         /// <summary>Factor of speed progession of the plant growth.</summary>
-        public float growSpeedFactor = 0.3f;
+        public float growSpeedFactor = 0.15f;
         /// <summary>Time in seconds between two extrusions.</summary>
         public int timeIntoExtrusion = 5;
         /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
         public int remainingExtrusions = 10;
+        /// <summary>Base radius of the branch.</summary>
+        public float radius = 0.05f;
 
-
-        /// <summary>Number of the current frame in the animation.</summary>
-        int currentAnimationFrame = 0;
         /// <summary>Direction of the branch for the animation.</summary>
         Vector3 direction = Vector3.up;
 
@@ -40,9 +39,14 @@ namespace PlantAI
         List<int> sharedIndicesToAnimate = new List<int>();
         /// <summary>Indices of raw vertex to animate.</summary>
         List<int> rawIndicesToAnimate = new List<int>();
+        /// <summary>Shared indices of each vertex per extrude slice.</summary>
+        List<List<int>> sliceIndices = new List<List<int>>();
 
         /// <summary>Flag for running.</summary>
         bool running = true;
+
+        double croissance = 0;
+        double croissanceLimitperExtrude = 0.3;
 
         // ==============================
         // UNITY METHODS
@@ -54,38 +58,91 @@ namespace PlantAI
             mesh = gameObject.GetComponent<ProBuilderMesh>();
             // Setup faces and indices attributes.
             SetupExtrudableFaces();
+            // Setup slice indices.
+            SetSliceIndices();
+            // Make the branch very THIN.
+            Grow(-(0.5f - radius));
             // Extrude the mesh once.
             Extrude();
         }
 
+        // ==============================
+        // PUBLIC METHODS
+        // ==============================
+
         public void UpdateAnimation(float energie)
         {
 
-            if (!running)
+            if (!running || energie < 0)
             {
                 return;
             }
 
-            if (currentAnimationFrame < timeIntoExtrusion * 60)
-            {
-                mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * energie);
-                mesh.Refresh();
+            croissance += Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
+            mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
+            mesh.TranslateVerticesInWorldSpace(rawIndicesToAnimate.ToArray(), Vector3.up * 2 * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
+            mesh.Refresh();
 
-                ++currentAnimationFrame;
+
+            if (croissance > croissanceLimitperExtrude)
+            {
+          
+                // Add point to the branch skeleton.
+                //GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                //sphere.transform.position = transform.TransformPoint(GetCenterExtrudablePosition());
+
+                GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
+                croissance = 0;
+
+                if (remainingExtrusions > 0)
+                {
+                    Extrude();
+                } else
+                {
+                    
+                    // Start a new branch in the continuity.
+                    GetComponent<BranchMotor>().
+                        CreateNewChildBranchContinuity(
+                            new KeyValuePair<Vector3, Vector3>(
+                                transform.TransformPoint(GetCenterExtrudablePosition()),
+                                GetCenterExtrudableNormal()
+                            ),
+                            GetHeadSliceRadius()
+                        );
+                    
+                    // Stop running the script if max number extrusion reached.
+                    running = false;
+                }
+            }    
+        }
+
+        /// <summary>
+        /// Make the branch become thinner (negative factor)
+        /// or thicker (positive factor).
+        /// </summary>
+        /// <param name="factor">Factor of the translation.</param>
+        public void Grow(float factor = 0.01f)
+        {   
+            if (transform.parent.GetComponent<BranchAnimator>() && GetSliceRadius(0) + factor > transform.parent.GetComponent<BranchAnimator>().GetSliceRadius(0))
+            {
                 return;
             }
-
-            // Reset current animation frame.
-            currentAnimationFrame = 0;
-
-            if (remainingExtrusions > 0)
+            for (var index = 0; index < sliceIndices.Count; ++index)
             {
-                Extrude();
-                return;
-            }
+                var slice = sliceIndices[index];
+                var centerPoint = GetCenterOfSlice(index);
 
-            // Stop running the script if max number extrusion reached.
-            running = false;
+                // Make the translation for each vertex of the slice
+                // towards/backwards the center point.
+                foreach (var i in slice)
+                {
+                    var direction = GetSharedVertexPosition(mesh.sharedVertices[i]) - centerPoint;
+                    direction.Normalize();
+                    var rawIndices = GetRawIndicesFromSharedIndex(i);
+
+                    mesh.TranslateVertices(rawIndices, direction * factor);
+                }
+            }
         }
 
         // ==============================
@@ -171,6 +228,52 @@ namespace PlantAI
         {
             var v = mesh.GetVertices()[centerExtrudableVertex[0]];
             return v.normal;
+        }
+
+        /// <summary>
+        /// Get the center position of one slice.
+        /// </summary>
+        /// <param name="index">Index of the slice.</param>
+        /// <returns>Position of the center point.</returns>
+        Vector3 GetCenterOfSlice(int index)
+        {
+            var slice = sliceIndices[index];
+
+            // Get the center point of the slice.
+            var centerPoint = new Vector3(0, 0, 0);
+            foreach (var i in slice)
+            {
+                centerPoint += GetSharedVertexPosition(mesh.sharedVertices[i]);
+            }
+            centerPoint /= slice.Count;
+
+            return centerPoint;
+        }
+
+        /// <summary>
+        /// Get the radius of one slice.
+        /// </summary>
+        /// <param name="index">Index of the slice.</param>
+        /// <returns>Radius of the slice.</returns>
+        public float GetSliceRadius(int index)
+        {
+            var slice = sliceIndices[index];
+            var indexOfOnePoint = slice[0];
+            var center = GetCenterOfSlice(index);
+
+            return Vector3.Distance(
+                GetSharedVertexPosition(mesh.sharedVertices[indexOfOnePoint]),
+                center
+            );
+        }
+
+        /// <summary>
+        /// Get the radius of the head slice.
+        /// </summary>
+        /// <returns>Radius of the head slice.</returns>
+        float GetHeadSliceRadius()
+        {
+            return GetSliceRadius(sliceIndices.Count - 1);
         }
 
         #endregion
@@ -262,8 +365,40 @@ namespace PlantAI
 
         #endregion
 
+        /// <summary>
+        /// Set the sliceIndices attribute.
+        /// Allow to get every vertex of each slice.
+        /// Useful to make the branch thicker, for instance.
+        /// </summary>
+        void SetSliceIndices()
+        {
+            int NB_VERTEX_PER_SLICE = 8;
+
+            // Clear the slice indices list.
+            sliceIndices.Clear();
+
+            // Get the number of slices in the branch.
+            // We do not take the two center faces vertices.
+            int sliceCount = (mesh.sharedVertices.Count - 2) / NB_VERTEX_PER_SLICE;
+
+            // Fill the list with lists of indices per slice.
+            for (var i = 0; i < sliceCount; ++i)
+            {
+                var slice = new List<int>();
+                for (var j = 0; j < NB_VERTEX_PER_SLICE; ++j)
+                {
+                    slice.Add(i + j * sliceCount);
+                }
+                sliceIndices.Add(slice);
+            }
+        }
+
+        /// <summary>
+        /// Extrude the branch and create a new slice.
+        /// </summary>
         void Extrude()
         {
+
             // Decrement remaining extrusions.
             --remainingExtrusions;
 
@@ -275,22 +410,24 @@ namespace PlantAI
             // Rebuild UVs, Collisions, Tangents, etc. TODO: check if necessary.
             mesh.Refresh();
 
+            // Re-set slice indices.
+            SetSliceIndices();
+
             // Reset indices to animate.
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            float randomness = 0.2f;
+            float randomness = 0.8f;
+
             direction = GetCenterExtrudableNormal() +
                 new Vector3(
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness)
                 );
-            direction.Normalize();
+            //direction.Normalize();
 
-            // Add point to the branch skeleton.
-             GetComponent<BranchMotor>().AddSkeletonPoint(transform.TransformPoint(GetCenterExtrudablePosition()), direction);
-            
+
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
@@ -302,8 +439,6 @@ namespace PlantAI
 
                 mesh.TranslateVertices(GetRawIndicesFromSharedIndex(i), diff);
             }
-
-  
         }
     }
 }

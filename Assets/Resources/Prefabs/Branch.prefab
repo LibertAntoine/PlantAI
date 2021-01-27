@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 2790295473843870938}
   - component: {fileID: 2790295473843870939}
   - component: {fileID: 2790295473843870941}
-  - component: {fileID: 2790295473843870942}
   - component: {fileID: 1337405566}
   m_Layer: 0
   m_Name: Branch
@@ -894,6 +893,7 @@ MonoBehaviour:
   growSpeedFactor: 0.5
   timeIntoExtrusion: 5
   remainingExtrusions: 10
+  radius: 0.05
 --- !u!114 &2790295473843870941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -906,19 +906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2790295473843870942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2790295473843870933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ffeccc72a1abeb4b9f7bb061de7be5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startScale: 0.02
+  generation: 0
 --- !u!114 &1337405566
 MonoBehaviour:
   m_ObjectHideFlags: 0
