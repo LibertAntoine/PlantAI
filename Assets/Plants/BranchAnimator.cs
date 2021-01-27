@@ -121,7 +121,11 @@ namespace PlantAI
         /// </summary>
         /// <param name="factor">Factor of the translation.</param>
         public void Grow(float factor = 0.01f)
-        {
+        {   
+            if (transform.parent.GetComponent<BranchAnimator>() && GetSliceRadius(0) + factor > transform.parent.GetComponent<BranchAnimator>().GetSliceRadius(0))
+            {
+                return;
+            }
             for (var index = 0; index < sliceIndices.Count; ++index)
             {
                 var slice = sliceIndices[index];
@@ -250,7 +254,7 @@ namespace PlantAI
         /// </summary>
         /// <param name="index">Index of the slice.</param>
         /// <returns>Radius of the slice.</returns>
-        float GetSliceRadius(int index)
+        public float GetSliceRadius(int index)
         {
             var slice = sliceIndices[index];
             var indexOfOnePoint = slice[0];
@@ -393,6 +397,7 @@ namespace PlantAI
         /// </summary>
         void Extrude()
         {
+
             // Decrement remaining extrusions.
             --remainingExtrusions;
 
