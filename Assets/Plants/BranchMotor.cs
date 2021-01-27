@@ -57,7 +57,7 @@ public class BranchMotor : MonoBehaviour
         if (branchAnimator)
         {
             branchAnimator.UpdateAnimation(growFactor);
-            branchAnimator.Grow(0.0002f * growFactor);
+            branchAnimator.Grow(0.0004f * growFactor);
         }
 
         if (accumulateEnergie > newBranchFactor && !haveChilds)
@@ -71,15 +71,22 @@ public class BranchMotor : MonoBehaviour
     public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
     {
         //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
-
-        for(int i = 0; i < numberChildBranch; i++)
+        if (generation + 1 != numberMaxGeneration)
         {
-            float rotation = (2 * Mathf.PI / numberChildBranch) * i;
-            GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-            GameObject instance = Instantiate(branch, positionAndNormal.Key, Quaternion.identity, transform);
-            instance.GetComponent<BranchMotor>().generation = generation + 1;
-            instance.transform.localRotation = Quaternion.Euler(Mathf.Sin(rotation) * Mathf.Rad2Deg, 0, Mathf.Cos(rotation) * Mathf.Rad2Deg);
-           
+            for (int i = 0; i < numberChildBranch; i++)
+            {
+                float rotation = (2 * Mathf.PI / numberChildBranch) * i;
+                GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
+                GameObject instance = Instantiate(branch, positionAndNormal.Key, Quaternion.identity, transform);
+                instance.GetComponent<BranchMotor>().generation = generation + 1;
+                instance.transform.localRotation = Quaternion.Euler(Mathf.Sin(rotation) * Mathf.Rad2Deg, 0, Mathf.Cos(rotation) * Mathf.Rad2Deg);
+
+            }
+        } else {
+            //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
+
+            Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
+            Instantiate((GameObject)Resources.Load("Prefabs/Flower", typeof(GameObject)), positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
         }
     }
 
@@ -103,7 +110,7 @@ public class BranchMotor : MonoBehaviour
             //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
 
             Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
-            GameObject leaf = Instantiate((GameObject)Resources.Load("Prefabs/Flower", typeof(GameObject)), positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
+            Instantiate((GameObject)Resources.Load("Prefabs/Flower", typeof(GameObject)), positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
         }
     }
 
