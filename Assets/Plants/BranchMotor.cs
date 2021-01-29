@@ -24,34 +24,31 @@ public class BranchMotor : MonoBehaviour
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
     private BranchCreatorMotor branchCreatorMotor;
+    private LeafFactory leafFactory;
 
     private bool haveChilds = false;
 
     void Awake()
     {
-        if (!gameObject.GetComponent<BranchColorMotor>())
-            Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage the color of the branch.");
-        else
-            branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
+        // Recup script dependencies
+        branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
+        if (branchColorMotor == null) Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage the color of the branch.");
 
-        if (!gameObject.GetComponent<BranchAnimator>())
-            Debug.LogError("GameObject '" + name + "' should have BranchAnimator script to manage grow expansion.");
-        else
-            branchAnimator = gameObject.GetComponent<BranchAnimator>();
+        branchAnimator = gameObject.GetComponent<BranchAnimator>();
+        if (branchAnimator == null) Debug.LogError("GameObject '" + name + "' should have BranchAnimator script to manage grow expansion.");
 
-        if (!gameObject.GetComponent<BranchCreatorMotor>())
-            Debug.LogError("GameObject '" + name + "' should have BranchCreatorMotor script to manage new branch creation.");
-        else
-            branchCreatorMotor = gameObject.GetComponent<BranchCreatorMotor>();
+        branchCreatorMotor = gameObject.GetComponent<BranchCreatorMotor>();
+        if (branchCreatorMotor == null) Debug.LogError("GameObject '" + name + "' should have BranchCreatorMotor script to manage new branch creation.");
+
+        leafFactory = FindObjectOfType<LeafFactory>();
+        if (leafFactory == null) Debug.LogError("GameObject '" + name + "' don't find LeafFactory and cannot create leaf.");
+
     }
-
 
     void Update()
     {
         float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
-        accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
-
-
+        
         if (branchColorMotor)
             branchColorMotor.UpdateColor();
 
@@ -61,6 +58,8 @@ public class BranchMotor : MonoBehaviour
             branchAnimator.Grow(0.0004f * growFactor);
         }
 
+
+        accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
         if (accumulatedEnergie > energieForNewBranch && !haveChilds)
         {
             haveChilds = true;
@@ -69,20 +68,17 @@ public class BranchMotor : MonoBehaviour
 
     }
 
-    public void CreateNewLeaf()
-    {
-        KeyValuePair<Vector3, Vector3> positionAndNormal = skeletonPoints.ElementAt(skeletonPoints.Count - 1);
-        Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
-
-        Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value) * Quaternion.FromToRotation(positionAndNormal.Value, transform.InverseTransformDirection(giveMostExposedDirection()));
-        GameObject leaf = Instantiate((GameObject)Resources.Load("Prefabs/Leave", typeof(GameObject)), positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
-    }
 
     public void AddSkeletonPoint(Vector3 position, Vector3 normal)
     {
         normal = transform.rotation * normal;
         skeletonPoints.Add(position, normal);
-        CreateNewLeaf();
+        if(leafFactory != null) leafFactory.CreateNewLeaf(giveMostExposedDirection(), new KeyValuePair <Vector3,Vector3>(position, normal));
+    }
+
+    private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()
+    {
+        return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count - 1));
     }
 
     private Vector3 giveMostExposedDirection()
@@ -100,12 +96,7 @@ public class BranchMotor : MonoBehaviour
         return mostExposedDirection.Key;
     }
 
-    private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()
-    {
- 
 
-        return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count - 1));
-    }
 
     ///// Setters /////
     public void SetLightExposition(Dictionary<Vector3, float> exposition)
