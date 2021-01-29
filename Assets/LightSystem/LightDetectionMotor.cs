@@ -32,6 +32,7 @@ public class LightDetectionMotor : MonoBehaviour
         currentPlant = plantsGroup;
         StartCoroutine(ScanBranch());
     }
+
     private IEnumerator ScanBranch()
     {
         Dictionary<Vector3, float> lightExposition = new Dictionary<Vector3, float>(picturePerBranch);

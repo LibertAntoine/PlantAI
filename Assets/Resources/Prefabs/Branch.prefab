@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2790295473843870939}
   - component: {fileID: 2790295473843870941}
   - component: {fileID: 1337405566}
+  - component: {fileID: 7363415563435781741}
   m_Layer: 0
   m_Name: Branch
   m_TagString: Untagged
@@ -906,7 +907,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generation: 0
 --- !u!114 &1337405566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -921,3 +921,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Color1: {r: 1, g: 1, b: 1, a: 0}
   Color2: {r: 0.3773585, g: 0.26061162, b: 0.1548594, a: 0}
+--- !u!114 &7363415563435781741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2790295473843870933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f60ca3b48f77644cac3331d74ab8969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberMaxGeneration: 2

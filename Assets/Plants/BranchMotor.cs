@@ -8,29 +8,31 @@ public class BranchMotor : MonoBehaviour
 {
 
 
-    private float lightSeuilOfDeaph = 15000f;
-    private float lightNeedForGrowFactor = 200000f;
-    private float newBranchFactor = 40000000f;
 
+    private float lightSeuilOfDeath = 15000f;
+
+    private float energieNeedForGrow = 200000f;
+
+    private float energieForNewBranch = 40000000f;
+    private float accumulatedEnergie = 0;
+
+    /// <summary>Light information recup from LightDetectionMotor</summary>
     private Dictionary<Vector3, float> lightExposition;
-    private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
-    private List<uint> alreadySelectedDirections = new List<uint>();
-    private List<int> alreadySelectedSkeletonPoints = new List<int>();
 
+    /// <summary>Regular skeleton points along </summary>
+    private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
+
+    /// <summary>Branch script dependancies</summary>
     private BranchColorMotor branchColorMotor;
     private BranchAnimator branchAnimator;
+    private BranchCreatorMotor branchCreatorMotor;
 
-    public int generation = 0;
-    public int numberMaxGeneration = 2;
-
-    private float accumulateEnergie = 0;
     private bool haveChilds = false;
-    private int numberChildBranch = 3;
 
     void Awake()
     {
         if (!gameObject.GetComponent<BranchColorMotor>())
-            Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage grow expansion.");
+            Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage the color of the branch.");
         else
             branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
 
@@ -38,17 +40,18 @@ public class BranchMotor : MonoBehaviour
             Debug.LogError("GameObject '" + name + "' should have BranchAnimator script to manage grow expansion.");
         else
             branchAnimator = gameObject.GetComponent<BranchAnimator>();
+
+        if (!gameObject.GetComponent<BranchCreatorMotor>())
+            Debug.LogError("GameObject '" + name + "' should have BranchCreatorMotor script to manage new branch creation.");
+        else
+            branchCreatorMotor = gameObject.GetComponent<BranchCreatorMotor>();
     }
 
-    void Start()
-    {
-   
-    }
 
     void Update()
     {
-        float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeaph) / lightNeedForGrowFactor;
-        accumulateEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeaph, 0);
+        float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
+        accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
 
 
         if (branchColorMotor)
@@ -60,58 +63,12 @@ public class BranchMotor : MonoBehaviour
             branchAnimator.Grow(0.0004f * growFactor);
         }
 
-        if (accumulateEnergie > newBranchFactor && !haveChilds)
+        if (accumulatedEnergie > energieForNewBranch && !haveChilds)
         {
             haveChilds = true;
-            CreateNewChildBranch(giveMostExposedDirection(), giveRandomSkeletonPoint());
+            branchCreatorMotor.CreateNewChildBranch(giveRandomSkeletonPoint());
         }
 
-    }
-
-    public void CreateNewChildBranch(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
-    {
-        //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(0.2f, 0.8f), Random.Range(-0.1f, 0.1f));
-        if (generation + 1 != numberMaxGeneration)
-        {
-            for (int i = 0; i < numberChildBranch; i++)
-            {
-                float rotation = (2 * Mathf.PI / numberChildBranch) * i;
-                GameObject branch = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-                GameObject instance = Instantiate(branch, positionAndNormal.Key, Quaternion.identity, transform);
-                instance.GetComponent<BranchMotor>().generation = generation + 1;
-                instance.transform.localRotation = Quaternion.Euler(Mathf.Sin(rotation) * Mathf.Rad2Deg, 0, Mathf.Cos(rotation) * Mathf.Rad2Deg);
-
-            }
-        } else {
-            //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
-
-            Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
-            Instantiate((GameObject)Resources.Load("Prefabs/Flower", typeof(GameObject)), positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
-        }
-    }
-
-    /// <summary>
-    /// Create a branch in the continuity of
-    /// the given position and normal.
-    /// </summary>
-    /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
-    /// <param name="radius">Base radius of the branch.</param>
-    public void CreateNewChildInContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
-    {
-        if (generation + 1 != numberMaxGeneration)
-        {
-            Quaternion quat = Quaternion.FromToRotation(Vector3.up, transform.rotation * positionAndNormal.Value);
-            GameObject branchPrefab = (GameObject)Resources.Load("Prefabs/Branch", typeof(GameObject));
-            GameObject branch = Instantiate(branchPrefab, positionAndNormal.Key, quat, transform);
-            branch.GetComponent<BranchMotor>().generation = generation + 1;
-            branch.GetComponent<BranchAnimator>().radius = radius;
-        } else
-        {
-            //Vector3 RandomInfluenceDirection = new Vector3(Random.Range(-0.1f, 0.1f), 0, Random.Range(-0.1f, 0.1f));
-
-            Quaternion quat = Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value);
-            Instantiate((GameObject)Resources.Load("Prefabs/Flower", typeof(GameObject)), positionAndNormal.Key, quat, GameObject.FindGameObjectsWithTag("ParentLeaf")[0].transform);
-        }
     }
 
     public void CreateNewLeaf()
@@ -161,7 +118,7 @@ public class BranchMotor : MonoBehaviour
     ///// Getters /////
     public float GetGlobalLightExposition()
     {
-        if (lightExposition == null) { return lightSeuilOfDeaph;}
+        if (lightExposition == null) { return lightSeuilOfDeath; }
         float globalExposition = 0f;
         foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
             globalExposition += lightDirection.Value;
