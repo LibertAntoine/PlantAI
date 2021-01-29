@@ -18,13 +18,20 @@ namespace PlantAI
         // ==============================
 
         /// <summary>Factor of speed progession of the plant growth.</summary>
+        [Tooltip("Factor of speed progession of the plant growth.")]
         public float growSpeedFactor = 0.15f;
-        /// <summary>Time in seconds between two extrusions.</summary>
-        public int timeIntoExtrusion = 5;
         /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
+        [Tooltip("Number of remaining extrusions. Set value to the max number.")]
         public int remainingExtrusions = 10;
         /// <summary>Base radius of the branch.</summary>
+        [Tooltip("Base radius of the branch.")]
         public float radius = 0.05f;
+        /// <summary>
+        /// Define the length of each slice extrusion. 
+        /// Make it low to get a good precision (more energy-intensive).
+        /// </summary>
+        [Tooltip("Define the length of each slice extrusion. Make it low to get a good precision (more energy-intensive).")]
+        public double croissanceLimitPerExtrude = 0.3;
 
         /// <summary>Direction of the branch for the animation.</summary>
         Vector3 direction = Vector3.up;
@@ -46,7 +53,6 @@ namespace PlantAI
         bool running = true;
 
         double croissance = 0;
-        double croissanceLimitperExtrude = 0.3;
 
         // ==============================
         // UNITY METHODS
