@@ -87,7 +87,6 @@ namespace PlantAI
             var offset = Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
             croissance += offset;
             mesh.TranslateVertices(rawIndicesToAnimate, direction * offset);
-            // mesh.TranslateVerticesInWorldSpace(rawIndicesToAnimate.ToArray(), Vector3.up * 2 * offset);
             mesh.Refresh();
 
 
@@ -446,6 +445,7 @@ namespace PlantAI
             // Compute a new direction.
             float randomness = 0.4f;
             direction = GetCenterExtrudableNormal() +
+                Vector3.up * 0.5f +
                 new Vector3(
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness),
