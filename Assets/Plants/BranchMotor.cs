@@ -2,115 +2,117 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using PlantAI;
 
-public class BranchMotor : MonoBehaviour
+namespace PlantAI
 {
-
-    private float lightSeuilOfDeath = 15000f;
-
-    private float energieNeedForGrow = 200000f;
-
-    private float energieForNewBranch = 40000000f;
-    private float accumulatedEnergie = 0;
-
-    /// <summary>Light information recup from LightDetectionMotor</summary>
-    private Dictionary<Vector3, float> lightExposition;
-
-    /// <summary>Regular skeleton points along </summary>
-    private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
-
-    /// <summary>Branch script dependancies</summary>
-    private BranchColorMotor branchColorMotor;
-    private BranchAnimator branchAnimator;
-    private BranchCreatorMotor branchCreatorMotor;
-    private LeafFactory leafFactory;
-
-    private bool haveChilds = false;
-
-    void Awake()
+    public class BranchMotor : MonoBehaviour
     {
-        // Recup script dependencies
-        branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
-        if (branchColorMotor == null) Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage the color of the branch.");
 
-        branchAnimator = gameObject.GetComponent<BranchAnimator>();
-        if (branchAnimator == null) Debug.LogError("GameObject '" + name + "' should have BranchAnimator script to manage grow expansion.");
+        private float lightSeuilOfDeath = 15000f;
 
-        branchCreatorMotor = gameObject.GetComponent<BranchCreatorMotor>();
-        if (branchCreatorMotor == null) Debug.LogError("GameObject '" + name + "' should have BranchCreatorMotor script to manage new branch creation.");
+        private float energieNeedForGrow = 200000f;
 
-        leafFactory = FindObjectOfType<LeafFactory>();
-        if (leafFactory == null) Debug.LogError("GameObject '" + name + "' don't find LeafFactory and cannot create leaf.");
+        private float energieForNewBranch = 40000000f;
+        private float accumulatedEnergie = 0;
 
-    }
+        /// <summary>Light information recup from LightDetectionMotor</summary>
+        private Dictionary<Vector3, float> lightExposition;
 
-    void Update()
-    {
-        float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
-        
-        if (branchColorMotor)
-            branchColorMotor.UpdateColor();
+        /// <summary>Regular skeleton points along </summary>
+        private Dictionary<Vector3, Vector3> skeletonPoints = new Dictionary<Vector3, Vector3>();
 
-        if (branchAnimator)
+        /// <summary>Branch script dependancies</summary>
+        private BranchColorMotor branchColorMotor;
+        private BranchAnimator branchAnimator;
+        private BranchCreatorMotor branchCreatorMotor;
+        private LeafFactory leafFactory;
+
+        private bool haveChilds = false;
+
+        void Awake()
         {
-            branchAnimator.UpdateAnimation(growFactor);
-            branchAnimator.Grow(0.0004f * growFactor);
+            // Recup script dependencies
+            branchColorMotor = gameObject.GetComponent<BranchColorMotor>();
+            if (branchColorMotor == null) Debug.LogError("GameObject '" + name + "' should have BranchColorMotor script to manage the color of the branch.");
+
+            branchAnimator = gameObject.GetComponent<BranchAnimator>();
+            if (branchAnimator == null) Debug.LogError("GameObject '" + name + "' should have BranchAnimator script to manage grow expansion.");
+
+            branchCreatorMotor = gameObject.GetComponent<BranchCreatorMotor>();
+            if (branchCreatorMotor == null) Debug.LogError("GameObject '" + name + "' should have BranchCreatorMotor script to manage new branch creation.");
+
+            leafFactory = FindObjectOfType<LeafFactory>();
+            if (leafFactory == null) Debug.LogError("GameObject '" + name + "' don't find LeafFactory and cannot create leaf.");
+
         }
 
-
-        accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
-        if (accumulatedEnergie > energieForNewBranch && !haveChilds)
+        void Update()
         {
-            haveChilds = true;
-            branchCreatorMotor.CreateNewChildBranch(giveRandomSkeletonPoint());
-        }
+            float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
 
-    }
+            if (branchColorMotor)
+                branchColorMotor.UpdateColor();
 
-
-    public void AddSkeletonPoint(Vector3 position, Vector3 normal)
-    {
-        normal = transform.rotation * normal;
-        skeletonPoints.Add(position, normal);
-        if(leafFactory != null) leafFactory.CreateNewLeaf(giveMostExposedDirection(), new KeyValuePair <Vector3,Vector3>(position, normal));
-    }
-
-    private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()
-    {
-        return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count - 1));
-    }
-
-    private Vector3 giveMostExposedDirection()
-    {
-        if (lightExposition == null) return new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
-
-        KeyValuePair<Vector3, float> mostExposedDirection;
-        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
-        {
-            if (mostExposedDirection.Value < lightDirection.Value)
+            if (branchAnimator)
             {
-                mostExposedDirection = lightDirection;
+                branchAnimator.UpdateAnimation(growFactor);
+                branchAnimator.Grow(0.0004f * growFactor);
             }
+
+
+            accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
+            if (accumulatedEnergie > energieForNewBranch && !haveChilds)
+            {
+                haveChilds = true;
+                branchCreatorMotor.CreateNewChildBranch(giveRandomSkeletonPoint());
+            }
+
         }
-        return mostExposedDirection.Key;
-    }
+
+
+        public void AddSkeletonPoint(Vector3 position, Vector3 normal)
+        {
+            normal = transform.rotation * normal;
+            skeletonPoints.Add(position, normal);
+            if (leafFactory != null) leafFactory.CreateNewLeaf(giveMostExposedDirection(), new KeyValuePair<Vector3, Vector3>(position, normal));
+        }
+
+        private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()
+        {
+            return skeletonPoints.ElementAt(Random.Range(0, skeletonPoints.Count - 1));
+        }
+
+        private Vector3 giveMostExposedDirection()
+        {
+            if (lightExposition == null) return new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+
+            KeyValuePair<Vector3, float> mostExposedDirection;
+            foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
+            {
+                if (mostExposedDirection.Value < lightDirection.Value)
+                {
+                    mostExposedDirection = lightDirection;
+                }
+            }
+            return mostExposedDirection.Key;
+        }
 
 
 
-    ///// Setters /////
-    public void SetLightExposition(Dictionary<Vector3, float> exposition)
-    {
-        lightExposition = exposition;
-    }
+        ///// Setters /////
+        public void SetLightExposition(Dictionary<Vector3, float> exposition)
+        {
+            lightExposition = exposition;
+        }
 
-    ///// Getters /////
-    public float GetGlobalLightExposition()
-    {
-        if (lightExposition == null) { return lightSeuilOfDeath; }
-        float globalExposition = 0f;
-        foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
-            globalExposition += lightDirection.Value;
-        return globalExposition / lightExposition.Count;
+        ///// Getters /////
+        public float GetGlobalLightExposition()
+        {
+            if (lightExposition == null) { return lightSeuilOfDeath; }
+            float globalExposition = 0f;
+            foreach (KeyValuePair<Vector3, float> lightDirection in lightExposition)
+                globalExposition += lightDirection.Value;
+            return globalExposition / lightExposition.Count;
+        }
     }
 }
