@@ -7,8 +7,6 @@ using PlantAI;
 public class BranchMotor : MonoBehaviour
 {
 
-
-
     private float lightSeuilOfDeath = 15000f;
 
     private float energieNeedForGrow = 200000f;
