@@ -472,7 +472,7 @@ namespace PlantAI
                     var dir = closest - center;
                     // Make the director vector more random. Very useful because we cannot just
                     // take the director vector to the closest point if it is orthogonal to the Branch.
-                    //  This is a little workaround which can be improved.
+                    // This is a little workaround which can be improved.
                     dir += new Vector3(Random.Range(0, 0.5f), Random.Range(0, 0.5f), Random.Range(0, 0.5f));
                     dir.Normalize();
                     // Compute a position outside the obstacle where the Branch should go towards.
