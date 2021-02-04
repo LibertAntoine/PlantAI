@@ -50,17 +50,20 @@ namespace PlantAI
         {
             float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
 
+            
             if (branchColorMotor)
                 branchColorMotor.UpdateColor();
+            
 
             if (branchAnimator)
             {
                 branchAnimator.UpdateAnimation(growFactor);
-                branchAnimator.Grow(0.0004f * growFactor);
+                //branchAnimator.Grow(0.0004f * growFactor);
             }
+           
 
 
-            accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
+           accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
             if (accumulatedEnergie > energieForNewBranch && !haveChilds)
             {
                 haveChilds = true;
