@@ -22,7 +22,7 @@ namespace PlantAI
         public void UpdateColor()
         {
             _renderer.GetPropertyBlock(propBlock);
-            propBlock.SetColor("_Color", Color.Lerp(Color1, Color2, Mathf.Min(branchAnimator.GetSliceRadius(0), 0.2f)));
+            propBlock.SetColor("_Color", Color.Lerp(Color1, Color2, Mathf.Min(branchAnimator.GetSliceRadius(0), 0.1f)));
         }
     }
 }

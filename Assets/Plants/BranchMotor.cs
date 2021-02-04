@@ -28,6 +28,8 @@ namespace PlantAI
         private LeafFactory leafFactory;
 
         private bool haveChilds = false;
+        private float growDelai = 1;
+        private float timeSinceGrow = 0;
 
         void Awake()
         {
@@ -53,12 +55,17 @@ namespace PlantAI
             
             if (branchColorMotor)
                 branchColorMotor.UpdateColor();
-            
 
+            timeSinceGrow += Time.deltaTime;
+            Debug.Log(Time.deltaTime);
             if (branchAnimator)
             {
                 branchAnimator.UpdateAnimation(growFactor);
-                //branchAnimator.Grow(0.0004f * growFactor);
+                if (timeSinceGrow > growDelai)
+                {
+                    timeSinceGrow = 0;
+                    branchAnimator.Grow(0.0004f * growFactor * 10);
+                }
             }
            
 
