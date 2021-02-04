@@ -63,7 +63,7 @@ namespace PlantAI
                 if (timeSinceGrow > growDelai)
                 {
                     timeSinceGrow = 0;
-                    branchAnimator.Grow(0.0004f * (growFactor * 20 / (branchCreatorMotor.generation + 1)));
+                    branchAnimator.Grow(0.0004f * (growFactor * 10 / (branchCreatorMotor.generation + 1)));
                 }
             }
            

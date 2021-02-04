@@ -11,7 +11,7 @@ namespace PlantAI
         // ==============================
 
         /// <summary>Number max for génération (before creation of a flower).</summary>
-        public int maxGeneration = 2;
+        public int maxGeneration = 4;
         /// <summary>Generation management</summary>
         public int numberBranchesPerNewGroup = 3;
 

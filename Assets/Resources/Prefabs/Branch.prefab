@@ -935,3 +935,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxGeneration: 2
   numberBranchesPerNewGroup: 3
+  generation: 0
