@@ -56,10 +56,6 @@ namespace PlantAI
                         .transform.localRotation = Quaternion.Euler(Mathf.Sin(rotation) * Mathf.Rad2Deg, 0, Mathf.Cos(rotation) * Mathf.Rad2Deg);
                 }
             }
-            else if (flowerFactory != null)
-            {
-                flowerFactory.CreateNewFlower(positionAndNormal);
-            }
         }
 
         /// <summary>

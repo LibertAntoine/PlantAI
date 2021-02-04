@@ -892,9 +892,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   growSpeedFactor: 0.5
-  timeIntoExtrusion: 5
   remainingExtrusions: 10
   radius: 0.05
+  croissanceLimitPerExtrude: 0.3
 --- !u!114 &2790295473843870941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,4 +933,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f60ca3b48f77644cac3331d74ab8969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberMaxGeneration: 2
+  maxGeneration: 2
+  numberBranchesPerNewGroup: 3

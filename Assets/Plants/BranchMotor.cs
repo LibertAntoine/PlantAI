@@ -100,8 +100,6 @@ namespace PlantAI
             return mostExposedDirection.Key;
         }
 
-
-
         ///// Setters /////
         public void SetLightExposition(Dictionary<Vector3, float> exposition)
         {
