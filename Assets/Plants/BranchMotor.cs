@@ -12,7 +12,7 @@ namespace PlantAI
 
         private float energieNeedForGrow = 200000f;
 
-        private float energieForNewBranch = 40000000f;
+        private float energieForNewBranch = 70000000f;
         private float accumulatedEnergie = 0;
 
         /// <summary>Light information recup from LightDetectionMotor</summary>
@@ -57,14 +57,13 @@ namespace PlantAI
                 branchColorMotor.UpdateColor();
 
             timeSinceGrow += Time.deltaTime;
-            Debug.Log(Time.deltaTime);
             if (branchAnimator)
             {
                 branchAnimator.UpdateAnimation(growFactor);
                 if (timeSinceGrow > growDelai)
                 {
                     timeSinceGrow = 0;
-                    branchAnimator.Grow(0.0004f * growFactor * 10);
+                    branchAnimator.Grow(0.0004f * (growFactor * 20 / (branchCreatorMotor.generation + 1)));
                 }
             }
            

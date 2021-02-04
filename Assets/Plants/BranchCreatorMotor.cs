@@ -16,7 +16,7 @@ namespace PlantAI
         public int numberBranchesPerNewGroup = 3;
 
         /// <summary>Generation of current branch.</summary>
-        private uint generation;
+        public uint generation;
         /// <summary>Path of prefab for new branch instantiation.</summary>
         private string branchPrefabPath = "Prefabs/Branch";
         /// <summary>Script to create flower.</summary>
