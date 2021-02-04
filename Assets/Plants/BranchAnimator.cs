@@ -49,10 +49,14 @@ namespace PlantAI
         /// <summary>Shared indices of each vertex per extrude slice.</summary>
         List<List<int>> sliceIndices = new List<List<int>>();
 
+        /// <summary>Tendency of the plant to go upwards</summary>
+        float upInfluence = 0.3f;
+
         /// <summary>Flag for running.</summary>
         bool running = true;
 
-        double croissance = 0;
+        float croissance = 0;
+
 
         // ==============================
         // UNITY METHODS
@@ -445,7 +449,7 @@ namespace PlantAI
             // Compute a new direction.
             float randomness = 0.4f;
             direction = GetCenterExtrudableNormal() +
-                Vector3.up * 0.5f +
+                 transform.InverseTransformDirection(Vector3.up) * upInfluence +
                 new Vector3(
                     Random.Range(-randomness, randomness),
                     Random.Range(-randomness, randomness),
