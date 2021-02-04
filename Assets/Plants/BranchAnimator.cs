@@ -18,13 +18,20 @@ namespace PlantAI
         // ==============================
 
         /// <summary>Factor of speed progession of the plant growth.</summary>
+        [Tooltip("Factor of speed progession of the plant growth.")]
         public float growSpeedFactor = 0.15f;
-        /// <summary>Time in seconds between two extrusions.</summary>
-        public int timeIntoExtrusion = 5;
         /// <summary>Number of remaining extrusions. Set value to the max number.</summary>
+        [Tooltip("Number of remaining extrusions. Set value to the max number.")]
         public int remainingExtrusions = 10;
         /// <summary>Base radius of the branch.</summary>
+        [Tooltip("Base radius of the branch.")]
         public float radius = 0.05f;
+        /// <summary>
+        /// Define the length of each slice extrusion. 
+        /// Make it low to get a good precision (more energy-intensive).
+        /// </summary>
+        [Tooltip("Define the length of each slice extrusion. Make it low to get a good precision (more energy-intensive).")]
+        public double croissanceLimitPerExtrude = 0.3;
 
         /// <summary>Direction of the branch for the animation.</summary>
         Vector3 direction = Vector3.up;
@@ -46,7 +53,6 @@ namespace PlantAI
         bool running = true;
 
         double croissance = 0;
-        double croissanceLimitperExtrude = 0.3;
 
         // ==============================
         // UNITY METHODS
@@ -78,15 +84,15 @@ namespace PlantAI
                 return;
             }
 
-            croissance += Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
-            mesh.TranslateVertices(rawIndicesToAnimate, direction * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
-            mesh.TranslateVerticesInWorldSpace(rawIndicesToAnimate.ToArray(), Vector3.up * 2 * Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f));
+            var offset = Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
+            croissance += offset;
+            mesh.TranslateVertices(rawIndicesToAnimate, direction * offset);
             mesh.Refresh();
 
 
-            if (croissance > croissanceLimitperExtrude)
+            if (croissance > croissanceLimitPerExtrude)
             {
-          
+
                 // Add point to the branch skeleton.
                 //GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 //sphere.transform.position = transform.TransformPoint(GetCenterExtrudablePosition());
@@ -97,9 +103,10 @@ namespace PlantAI
                 if (remainingExtrusions > 0)
                 {
                     Extrude();
-                } else
+                }
+                else
                 {
-                    
+
                     // Start a new branch in the continuity.
                     GetComponent<BranchCreatorMotor>().
                         CreateNewChildInContinuity(
@@ -109,11 +116,11 @@ namespace PlantAI
                             ),
                             GetHeadSliceRadius()
                         );
-                    
+
                     // Stop running the script if max number extrusion reached.
                     running = false;
                 }
-            }    
+            }
         }
 
         /// <summary>
@@ -122,7 +129,7 @@ namespace PlantAI
         /// </summary>
         /// <param name="factor">Factor of the translation.</param>
         public void Grow(float factor = 0.01f)
-        {   
+        {
             if (transform.parent.GetComponent<BranchAnimator>() && GetSliceRadius(0) + factor > transform.parent.GetComponent<BranchAnimator>().GetSliceRadius(0))
             {
                 return;
@@ -417,17 +424,7 @@ namespace PlantAI
             SetupIndicesToAnimate();
 
             // Compute a direction.
-            float randomness = 0.6f;
-
-            direction = GetCenterExtrudableNormal() +
-                new Vector3(
-                    Random.Range(-randomness, randomness),
-                    Random.Range(-randomness, randomness),
-                    Random.Range(-randomness, randomness)
-                );
-            direction.Normalize();
-
-
+            var direction = ComputeDirection();
 
             // Rotate the face.
             foreach (var i in sharedIndicesToAnimate)
@@ -439,6 +436,54 @@ namespace PlantAI
 
                 mesh.TranslateVertices(GetRawIndicesFromSharedIndex(i), diff);
             }
+        }
+
+        /// <summary>Compute an extrude direction.</summary>
+        /// <returns>Direction.</returns>
+        Vector3 ComputeDirection()
+        {
+            // Compute a new direction.
+            float randomness = 0.4f;
+            direction = GetCenterExtrudableNormal() +
+                Vector3.up * 0.5f +
+                new Vector3(
+                    Random.Range(-randomness, randomness),
+                    Random.Range(-randomness, randomness),
+                    Random.Range(-randomness, randomness)
+                );
+            direction.Normalize();
+
+            // Check if the reaching point is accessible.
+            foreach (var go in GameObject.FindGameObjectsWithTag("Obstacle"))
+            {
+                var reachPosition =
+                    transform.TransformPoint(GetCenterExtrudablePosition()) +
+                    direction * (float)croissanceLimitPerExtrude;
+
+                var c = go.GetComponent<Collider>();
+
+                // Check if the reachPoint is inside the Collider.
+                if (c.bounds.Contains(reachPosition))
+                {
+                    // Get the closest point on the obstacle's bounds
+                    // and compute a director vector from its center.
+                    var closest = c.ClosestPointOnBounds(reachPosition);
+                    var center = c.bounds.center;
+                    var dir = closest - center;
+                    // Make the director vector more random. Very useful because we cannot just
+                    // take the director vector to the closest point if it is orthogonal to the Branch.
+                    // This is a little workaround which can be improved.
+                    dir += new Vector3(Random.Range(0, 0.5f), Random.Range(0, 0.5f), Random.Range(0, 0.5f));
+                    dir.Normalize();
+                    // Compute a position outside the obstacle where the Branch should go towards.
+                    var outsidePoint = closest + dir * 5 * GetHeadSliceRadius();
+
+                    // Set the new direction.
+                    direction = outsidePoint - transform.TransformPoint(GetCenterExtrudablePosition());
+                }
+            }
+
+            return direction;
         }
     }
 }
