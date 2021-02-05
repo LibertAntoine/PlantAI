@@ -19,7 +19,7 @@ namespace PlantAI
         // Update is called once per frame
         void Update()
         {
-            float factor = 0.1f;
+            float factor = 0.01f;
             if (transform.localScale.x < finalScale)
             {
                 transform.localScale += new Vector3(factor, factor, factor);

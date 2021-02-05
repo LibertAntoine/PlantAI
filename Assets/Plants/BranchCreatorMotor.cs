@@ -49,7 +49,8 @@ namespace PlantAI
         /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
         public void CreateNewChildBranch(KeyValuePair<Vector3, Vector3> positionAndNormal)
         {
-            if (!lastGen())
+
+            if (!lastGen() && !isNearObstacle(positionAndNormal.Key))
             {
                 float offset = Random.Range(0, 2 * Mathf.PI);
                 for (int i = 0; i < numberBranchesPerNewGroup; i++)
@@ -68,10 +69,10 @@ namespace PlantAI
         /// the given position and normal.
         /// </summary>
         /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
-        /// <param name="radius">Base radius of the branch.</param>
+        /// <param name="radius">Base radius of the branch.</param>d
         public void CreateNewChildInContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
         {
-            if (!lastGen())
+            if (!lastGen() && !isNearObstacle(positionAndNormal.Key))
             {
                 Instantiate(
                     (GameObject)Resources.Load(branchPrefabPath, typeof(GameObject)),
@@ -94,5 +95,18 @@ namespace PlantAI
         {
             return generation + 1 == maxGeneration;
         }
+
+        private bool isNearObstacle(Vector3 position)
+        {
+            foreach (var obstacle in GameObject.FindGameObjectsWithTag("Obstacle"))
+            {
+                if(obstacle.GetComponent<Collider>().bounds.Contains(position))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
