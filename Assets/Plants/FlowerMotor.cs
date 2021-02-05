@@ -16,7 +16,6 @@ namespace PlantAI
             transform.localScale = new Vector3(0.1f, 0.1f, 0.05f);
         }
 
-
         // Update is called once per frame
         void Update()
         {

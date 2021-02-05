@@ -10,11 +10,16 @@ namespace PlantAI
         // ATTRIBUTES
         // ==============================
 
-        private string leafPrefabPath = "Prefabs/Leaf";
+        private List<string> leafPrefabPath = new List<string>();
 
         // ==============================
-        // PUBLIC METHODS
+        // UNITY METHODS
         // ==============================
+
+        private void Awake()
+        {
+            leafPrefabPath.Add("Prefabs/Leaf");
+        }
 
         /// <summary>
         /// Create new leaf on a branch
@@ -22,10 +27,10 @@ namespace PlantAI
         /// </summary>
         /// <param name="direction">Direction (Vector3) for oriented the leaf</param>
         /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
-        public void CreateNewLeaf(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal)
+        public void CreateNewLeaf(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal, int style = 0)
         {
             Instantiate(
-                (GameObject)Resources.Load(leafPrefabPath, typeof(GameObject)),
+                (GameObject)Resources.Load(leafPrefabPath[0], typeof(GameObject)),
                 positionAndNormal.Key,
                 Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value) * Quaternion.FromToRotation(positionAndNormal.Value, transform.InverseTransformDirection(direction)),
                 transform);

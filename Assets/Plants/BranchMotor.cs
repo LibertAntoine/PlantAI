@@ -8,12 +8,11 @@ namespace PlantAI
     public class BranchMotor : MonoBehaviour
     {
 
-        private float lightSeuilOfDeath = 15000f;
 
-        private float energieNeedForGrow = 200000f;
-
-        private float energieForNewBranch = 70000000f;
-        private float accumulatedEnergie = 0;
+        public float lightSeuilOfDeath = 15000f;
+        public float energieNeedForGrow = 200000f;
+        public float energieForNewBranch = 70000000f;
+        public int leafStyle = 0;
 
         /// <summary>Light information recup from LightDetectionMotor</summary>
         private Dictionary<Vector3, float> lightExposition;
@@ -28,8 +27,10 @@ namespace PlantAI
         private LeafFactory leafFactory;
 
         private bool haveChilds = false;
-        private float growDelai = 1;
+        private float growDelai = 6;
         private float timeSinceGrow = 0;
+
+        private float accumulatedEnergie = 0;
 
         void Awake()
         {
@@ -63,7 +64,7 @@ namespace PlantAI
                 if (timeSinceGrow > growDelai)
                 {
                     timeSinceGrow = 0;
-                    branchAnimator.Grow(0.0004f * (growFactor * 10 / (branchCreatorMotor.generation + 1)));
+                    branchAnimator.Grow(0.0004f * (growFactor * 10 * growDelai / (branchCreatorMotor.generation + 1)));
                 }
             }
            
@@ -83,7 +84,7 @@ namespace PlantAI
         {
             normal = transform.rotation * normal;
             skeletonPoints.Add(position, normal);
-            if (leafFactory != null) leafFactory.CreateNewLeaf(giveMostExposedDirection(), new KeyValuePair<Vector3, Vector3>(position, normal));
+            if (leafFactory != null) leafFactory.CreateNewLeaf(giveMostExposedDirection(), new KeyValuePair<Vector3, Vector3>(position, normal), leafStyle);
         }
 
         private KeyValuePair<Vector3, Vector3> giveRandomSkeletonPoint()

@@ -20,9 +20,11 @@ namespace PlantAI
 
         /// <summary>Generation of current branch.</summary>
         public uint generation;
+        public int flowerStyle = 0;
 
         /// <summary>Script to create flower.</summary>
         private FlowerFactory flowerFactory;
+
 
 
 
@@ -70,7 +72,7 @@ namespace PlantAI
         /// </summary>
         /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
         /// <param name="radius">Base radius of the branch.</param>d
-        public void CreateNewChildInContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius)
+        public void CreateNewChildInContinuity(KeyValuePair<Vector3, Vector3> positionAndNormal, float radius = 0.5f)
         {
             if (!lastGen() && !isNearObstacle(positionAndNormal.Key))
             {
@@ -84,7 +86,7 @@ namespace PlantAI
             }
             else if (flowerFactory != null)
             {
-                flowerFactory.CreateNewFlower(positionAndNormal);
+                flowerFactory.CreateNewFlower(positionAndNormal, flowerStyle);
             }
         }
 
