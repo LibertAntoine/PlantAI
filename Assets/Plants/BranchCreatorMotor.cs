@@ -15,12 +15,16 @@ namespace PlantAI
         /// <summary>Generation management</summary>
         public int numberBranchesPerNewGroup = 3;
 
+        /// <summary>Path of prefab for new branch instantiation.</summary>
+        public string branchPrefabPath = "Prefabs/Branch";
+
         /// <summary>Generation of current branch.</summary>
         public uint generation;
-        /// <summary>Path of prefab for new branch instantiation.</summary>
-        private string branchPrefabPath = "Prefabs/Branch";
+
         /// <summary>Script to create flower.</summary>
         private FlowerFactory flowerFactory;
+
+
 
         // ==============================
         // UNITY METHODS

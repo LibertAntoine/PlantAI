@@ -933,6 +933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f60ca3b48f77644cac3331d74ab8969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxGeneration: 2
-  numberBranchesPerNewGroup: 3
+  maxGeneration: 3
+  numberBranchesPerNewGroup: 2
+  branchPrefabPath: Prefabs/Branch
   generation: 0
