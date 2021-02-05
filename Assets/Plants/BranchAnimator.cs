@@ -57,7 +57,6 @@ namespace PlantAI
 
         float croissance = 0;
 
-
         // ==============================
         // UNITY METHODS
         // ==============================
@@ -71,7 +70,7 @@ namespace PlantAI
             // Setup slice indices.
             SetSliceIndices();
             // Make the branch very THIN.
-            Grow(-(0.5f - radius));
+            ShrinkExpand(-(0.5f - radius));
             // Extrude the mesh once.
             Extrude();
         }
@@ -128,8 +127,7 @@ namespace PlantAI
         }
 
         /// <summary>
-        /// Make the branch become thinner (negative factor)
-        /// or thicker (positive factor).
+        /// Make the branch become thicker.
         /// </summary>
         /// <param name="factor">Factor of the translation.</param>
         public void Grow(float factor = 0.01f)
@@ -138,22 +136,13 @@ namespace PlantAI
             {
                 return;
             }
-            for (var index = 0; index < sliceIndices.Count; ++index)
+
+            if (factor <= 0)
             {
-                var slice = sliceIndices[index];
-                var centerPoint = GetCenterOfSlice(index);
-
-                // Make the translation for each vertex of the slice
-                // towards/backwards the center point.
-                foreach (var i in slice)
-                {
-                    var direction = GetSharedVertexPosition(mesh.sharedVertices[i]) - centerPoint;
-                    direction.Normalize();
-                    var rawIndices = GetRawIndicesFromSharedIndex(i);
-
-                    mesh.TranslateVertices(rawIndices, direction * factor);
-                }
+                throw new System.Exception("BranchAnimator.Grow: 'factor' arg cannot be negative.");
             }
+
+            ShrinkExpand(factor);
         }
 
         // ==============================
@@ -488,6 +477,31 @@ namespace PlantAI
             }
 
             return direction;
+        }
+
+        /// <summary>
+        /// Make the branch become thinner (negative factor)
+        /// or thicker (positive factor).
+        /// </summary>
+        /// <param name="factor">Factor of the translation.</param>
+        void ShrinkExpand(float factor)
+        {
+            for (var index = 0; index < sliceIndices.Count; ++index)
+            {
+                var slice = sliceIndices[index];
+                var centerPoint = GetCenterOfSlice(index);
+
+                // Make the translation for each vertex of the slice
+                // towards/backwards the center point.
+                foreach (var i in slice)
+                {
+                    var direction = GetSharedVertexPosition(mesh.sharedVertices[i]) - centerPoint;
+                    direction.Normalize();
+                    var rawIndices = GetRawIndicesFromSharedIndex(i);
+
+                    mesh.TranslateVertices(rawIndices, direction * factor);
+                }
+            }
         }
     }
 }
