@@ -19,6 +19,8 @@ namespace PlantAI
         private void Awake()
         {
             leafPrefabPath.Add("Prefabs/Leaf");
+            leafPrefabPath.Add("Prefabs/Leaf2");
+            leafPrefabPath.Add("Prefabs/Leaf3");
         }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace PlantAI
         public void CreateNewLeaf(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal, int style = 0)
         {
             Instantiate(
-                (GameObject)Resources.Load(leafPrefabPath[0], typeof(GameObject)),
+                (GameObject)Resources.Load(leafPrefabPath[style], typeof(GameObject)),
                 positionAndNormal.Key,
                 Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value) * Quaternion.FromToRotation(positionAndNormal.Value, transform.InverseTransformDirection(direction)),
                 transform);

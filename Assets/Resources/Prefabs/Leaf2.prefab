@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6670056761658922636}
-  m_LocalRotation: {x: -0.6256276, y: 0.4378574, z: -0.1498365, w: 0.62802875}
-  m_LocalPosition: {x: -0.012186643, y: -0.006444369, z: 0.008198406}
+  m_LocalRotation: {x: -0.6470053, y: 0.5217814, z: 0.0103865815, w: 0.5558962}
+  m_LocalPosition: {x: -0.007, y: 0.007, z: 0.012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9021103121867137394}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -139.11, y: -77.29498, z: 103.173}
+  m_LocalEulerAnglesHint: {x: -133.099, y: -56.03299, z: 103.76299}
 --- !u!33 &2610888748596749382
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a6c6c4eb7ac70d34ab1754462e33aef8, type: 2}
+  - {fileID: 2100000, guid: 90ba91a9527cfba44b439d0cbf8e450f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -104,13 +104,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7565451158757095091}
-  m_LocalRotation: {x: -0.66009086, y: -0.35838762, z: 0.120753825, w: 0.64904314}
-  m_LocalPosition: {x: -0.0012567654, y: -0.014683334, z: 0.0063278126}
+  m_LocalRotation: {x: -0.5525527, y: -0.5087702, z: -0.041444357, w: 0.6588785}
+  m_LocalPosition: {x: 0.0092, y: -0.0082, z: -0.0048}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9021103121867137394}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -50.381, y: -101.609, z: 81.033005}
+  m_LocalEulerAnglesHint: {x: -50.381, y: -101.609, z: 52.755}
 --- !u!33 &8399799782343297130
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -137,7 +137,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a6c6c4eb7ac70d34ab1754462e33aef8, type: 2}
+  - {fileID: 2100000, guid: 90ba91a9527cfba44b439d0cbf8e450f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -180,7 +180,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
       propertyPath: m_Name
-      value: Leaf
+      value: Leaf2
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
       propertyPath: m_RootOrder
@@ -241,11 +241,11 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a6c6c4eb7ac70d34ab1754462e33aef8, type: 2}
+      objectReference: {fileID: 2100000, guid: 90ba91a9527cfba44b439d0cbf8e450f, type: 2}
     - target: {fileID: 2300002, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a6c6c4eb7ac70d34ab1754462e33aef8, type: 2}
+      objectReference: {fileID: 2100000, guid: 90ba91a9527cfba44b439d0cbf8e450f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
 --- !u!1 &9021103121866784082 stripped
