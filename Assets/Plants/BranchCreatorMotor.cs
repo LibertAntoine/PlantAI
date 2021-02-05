@@ -30,7 +30,7 @@ namespace PlantAI
         {
             generation = (transform.parent.GetComponent<BranchCreatorMotor>() != null) ? transform.parent.GetComponent<BranchCreatorMotor>().generation + 1 : 0;
             flowerFactory = FindObjectOfType<FlowerFactory>();
-            if(flowerFactory == null) Debug.LogError("GameObject '" + name + "' don't find FlowerFactory and cannot create flower.");
+            if (flowerFactory == null) Debug.LogError("GameObject '" + name + "' don't find FlowerFactory and cannot create flower.");
         }
 
 
@@ -68,12 +68,13 @@ namespace PlantAI
         {
             if (!lastGen())
             {
-                Instantiate(
+                var branch = Instantiate(
                     (GameObject)Resources.Load(branchPrefabPath, typeof(GameObject)),
                     positionAndNormal.Key,
-                     Quaternion.FromToRotation(Vector3.up, transform.rotation * positionAndNormal.Value),
-                    transform)
-                        .GetComponent<BranchAnimator>().radius = radius;
+                    Quaternion.FromToRotation(Vector3.up, transform.rotation * positionAndNormal.Value),
+                    transform
+                );
+                branch.GetComponent<BranchAnimator>().radius = radius;
             }
             else if (flowerFactory != null)
             {

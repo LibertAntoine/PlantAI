@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba74fd92236363a4e9c92eab7ed442dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  finalScale: 5
 --- !u!1001 &9021103121866750962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,7 +180,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
       propertyPath: m_Name
-      value: Leave
+      value: Leaf
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
       propertyPath: m_RootOrder
@@ -237,6 +238,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -7.7310004
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a6c6c4eb7ac70d34ab1754462e33aef8, type: 2}
+    - target: {fileID: 2300002, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a6c6c4eb7ac70d34ab1754462e33aef8, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecd81068c266b044bb20a893bd88b327, type: 3}
 --- !u!1 &9021103121866784082 stripped
