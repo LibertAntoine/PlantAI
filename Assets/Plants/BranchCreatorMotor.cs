@@ -51,9 +51,10 @@ namespace PlantAI
         {
             if (!lastGen())
             {
+                float offset = Random.Range(0, 2 * Mathf.PI);
                 for (int i = 0; i < numberBranchesPerNewGroup; i++)
                 {
-                    float rotation = (2 * Mathf.PI / numberBranchesPerNewGroup) * i;
+                    float rotation = (2 * Mathf.PI / numberBranchesPerNewGroup) * i + offset;
                     Instantiate(
                         (GameObject)Resources.Load(branchPrefabPath, typeof(GameObject)),
                         positionAndNormal.Key, Quaternion.identity, transform)
