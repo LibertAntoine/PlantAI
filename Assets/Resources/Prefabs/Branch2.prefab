@@ -924,7 +924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Color1: {r: 1, g: 1, b: 1, a: 0}
-  Color2: {r: 0.3773585, g: 0.26061162, b: 0.1548594, a: 0}
+  Color2: {r: 0.23584908, g: 0.13221133, b: 0.03893734, a: 0}
 --- !u!114 &7363415563435781741
 MonoBehaviour:
   m_ObjectHideFlags: 0

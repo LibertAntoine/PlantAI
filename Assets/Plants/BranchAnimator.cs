@@ -137,10 +137,11 @@ namespace PlantAI
                 return;
             }
 
+            /*
             if (factor <= 0)
             {
                 throw new System.Exception("BranchAnimator.Grow: 'factor' arg cannot be negative.");
-            }
+            }*/
 
             ShrinkExpand(factor);
         }

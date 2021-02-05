@@ -7,6 +7,7 @@ namespace PlantAI
     public class LeafMotor : MonoBehaviour
     {
         public float finalScale = 5;
+        private bool isMature = false;
 
         // Start is called before the first frame update
         void Start()
@@ -20,9 +21,12 @@ namespace PlantAI
         void Update()
         {
             float factor = 0.01f;
-            if (transform.localScale.x < finalScale)
+            if (!isMature && transform.localScale.x < finalScale)
             {
                 transform.localScale += new Vector3(factor, factor, factor);
+            } else
+            {
+                isMature = true;
             }
         }
     }
