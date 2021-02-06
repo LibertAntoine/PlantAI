@@ -53,7 +53,6 @@ namespace PlantAI
         {
             float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
 
-            
             if (branchColorMotor)
                 branchColorMotor.UpdateColor();
 

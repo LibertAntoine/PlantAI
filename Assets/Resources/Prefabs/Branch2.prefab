@@ -892,7 +892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   growSpeedFactor: 0.5
-  remainingExtrusions: 10
+  remainingExtrusions: 15
   radius: 0.05
   croissanceLimitPerExtrude: 0.3
 --- !u!114 &2790295473843870941
@@ -908,8 +908,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightSeuilOfDeath: 15000
-  energieNeedForGrow: 200000
-  energieForNewBranch: 70000000
+  energieNeedForGrow: 30000
+  energieForNewBranch: 30000000
   leafStyle: 1
 --- !u!114 &1337405566
 MonoBehaviour:
@@ -924,7 +924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Color1: {r: 1, g: 1, b: 1, a: 0}
-  Color2: {r: 0.23584908, g: 0.13221133, b: 0.03893734, a: 0}
+  Color2: {r: 0.5849056, g: 0.31662157, b: 0.06897471, a: 0}
 --- !u!114 &7363415563435781741
 MonoBehaviour:
   m_ObjectHideFlags: 0

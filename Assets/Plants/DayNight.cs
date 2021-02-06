@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class DayNight : MonoBehaviour
 {
-    Light sun;
+    public GameObject sun;
     public float speed = 1f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        sun = GetComponent<Light>();
-    }
 
     // Update is called once per frame
     void Update()
