@@ -907,9 +907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightSeuilOfDeath: 15000
-  energieNeedForGrow: 30000
-  energieForNewBranch: 30000000
+  lightSeuilOfDeath: 30000
+  energieNeedForGrow: 200000
+  energieForNewBranch: 100000000
   leafStyle: 1
 --- !u!114 &1337405566
 MonoBehaviour:
@@ -937,8 +937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f60ca3b48f77644cac3331d74ab8969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxGeneration: 3
+  maxGeneration: 4
   numberBranchesPerNewGroup: 2
-  branchPrefabPath: Prefabs/Branch
+  branchPrefabPath: Prefabs/Branch2
   generation: 0
   flowerStyle: 0
