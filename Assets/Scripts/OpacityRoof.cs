@@ -12,7 +12,6 @@ public class OpacityRoof : MonoBehaviour
     {
         color = this.GetComponent<Renderer>().material.GetColor("_Color");
         opacity = color.a;
-        print(opacity);
     }
 
     // Update is called once per frame
@@ -36,6 +35,5 @@ public class OpacityRoof : MonoBehaviour
             opacity = this.GetComponent<Renderer>().material.GetColor("_Color").a - increment;
             this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, opacity));
         }
-        print(opacity);
     }
 }
