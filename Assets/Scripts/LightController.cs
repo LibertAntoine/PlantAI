@@ -5,21 +5,22 @@ using UnityEngine;
 public class LightController : MonoBehaviour
 {
 
-    Light light;
-    // Start is called before the first frame update
+    private Light light;
+    private GameObject mask;
+
     void Start()
     {
         light = GetComponentInChildren<Light>();
+        mask = transform.Find("Mask").gameObject;
+        mask.SetActive(false);
     }
-
-    // Update is called once per frame
     
     void OnMouseOver()
     {
         if (Input.GetMouseButtonDown(0))
         {
-     
             light.enabled = !light.enabled;
+            mask.SetActive((light.enabled) ? false : true); 
         }
     }
 }

@@ -86,6 +86,7 @@ namespace PlantAI
             {
                 return;
             }
+           
 
             var offset = Time.deltaTime * growSpeedFactor * Mathf.Min(energie, 1f);
             croissance += offset;
