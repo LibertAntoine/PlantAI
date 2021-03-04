@@ -4,45 +4,30 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
-    bool isNotCollidedLEFT = true;
-    bool isNotCollidedRIGHT = true;
-    bool isNotCollidedFORWARD = true;
-    bool isNotCollidedBACK = true;
+    bool contains;
 
     int speed = 13;
     float lastRotation = 0;
+
+    Vector3 newPos;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        newPos = transform.position;
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-     
-        if (transform.position.x >= 480)
+
+        if (contains)
         {
-            //float x = Mathf.Clamp(transform.position.x, 480, 482);
-            //transform.position = new Vector3(x, transform.position.y, transform.position.z);
-            transform.position = new Vector3(480,transform.position.y,transform.position.z);
-        }
-        else if (transform.position.x <= 382)
-        {
-            transform.position = new Vector3(382, transform.position.y, transform.position.z);
+            newPos = transform.position;
         }
 
-        if (transform.position.z >= 732)
-        {
-            //float x = Mathf.Clamp(transform.position.x, 480, 482);
-            //transform.position = new Vector3(x, transform.position.y, transform.position.z);
-            transform.position = new Vector3(transform.position.x, transform.position.y, 732);
-        }
-        else if (transform.position.z <= 640)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, 640);
-        }
-
+<<<<<<< Updated upstream
         /*if(transform.eulerAngles.y != lastRotation)
         {
             isNotCollidedLEFT = true;
@@ -64,68 +49,42 @@ public class Move : MonoBehaviour
         Vector3 newPos = transform.position;
 
         if (Input.GetKey(KeyCode.S)/* && isNotCollidedLEFT*/)
-        {
-            transform.Translate(Vector3.left * Time.deltaTime * speed);
-        }
-        if (Input.GetKey(KeyCode.Z) /*&& isNotCollidedRIGHT*/)
-        {
-            transform.Translate(Vector3.right * Time.deltaTime * speed);
-        }
-        if (Input.GetKey(KeyCode.Q) /*&& isNotCollidedFORWARD*/)
-        {
-            transform.Translate(Vector3.forward * Time.deltaTime * speed);
-        }
-        if (Input.GetKey(KeyCode.D) /*&& isNotCollidedBACK*/)
-        {
-            transform.Translate(Vector3.back * Time.deltaTime * speed);
-        }
-
-        lastRotation = transform.eulerAngles.y;
-    }
-
-   /* private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Collided with " + collision.gameObject.name);
+=======
         if (Input.GetKey(KeyCode.S))
+>>>>>>> Stashed changes
         {
-            isNotCollidedLEFT = false;
-            //isNotCollidedRIGHT = true;
-            //isNotCollidedFORWARD = true;
-            //isNotCollidedBACK = true;
+            newPos += transform.TransformDirection(Vector3.left) * Time.deltaTime * speed;         
         }
         if (Input.GetKey(KeyCode.Z))
         {
-            //isNotCollidedLEFT = true;
-            isNotCollidedRIGHT = false;
-            //isNotCollidedFORWARD = true;
-            //isNotCollidedBACK = true;
-
+            newPos += transform.TransformDirection(Vector3.right) * Time.deltaTime * speed;           
         }
         if (Input.GetKey(KeyCode.Q))
         {
-            //isNotCollidedLEFT = true;
-            //isNotCollidedRIGHT = true;
-            isNotCollidedFORWARD = false;
-            //isNotCollidedBACK = true;
-
+            newPos +=  transform.TransformDirection(Vector3.forward) * Time.deltaTime * speed;     
         }
         if (Input.GetKey(KeyCode.D))
         {
-            //isNotCollidedLEFT = true;
-            //isNotCollidedRIGHT = true;
-            //isNotCollidedFORWARD = true;
-            isNotCollidedBACK = false;
-
+            newPos += transform.TransformDirection(Vector3.back) * Time.deltaTime * speed;
         }
+
+
+        contains = false;
+        foreach (GameObject collidObject in GameObject.FindGameObjectsWithTag("ObstacleCamera"))
+        {
+            if (collidObject.GetComponent<Collider>().bounds.Contains(newPos))
+            {
+                contains = true;
+                Debug.Log(newPos);
+
+            }
+        }
+
+        if (!contains)
+        {
+            transform.position =newPos;
+        }
+        lastRotation = transform.eulerAngles.y;
+
     }
-    private void OnCollisionExit(Collision collision)
-    {
-        isNotCollidedLEFT = true;
-        isNotCollidedRIGHT = true;
-        isNotCollidedFORWARD = true;
-        isNotCollidedBACK = true;
-    }*/
-
-    
-
 }
