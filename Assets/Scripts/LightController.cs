@@ -5,14 +5,27 @@ using UnityEngine;
 public class LightController : MonoBehaviour
 {
 
+    public bool on = true;
+
     private Light light;
     private GameObject mask;
+
+
 
     void Start()
     {
         light = GetComponentInChildren<Light>();
         mask = transform.Find("Mask").gameObject;
-        mask.SetActive(false);
+        if(on)
+        {
+            light.enabled = true;
+            mask.SetActive(false);
+        }
+        else
+        {
+            light.enabled = false;
+            mask.SetActive(true);
+        }
     }
     
     void OnMouseOver()
