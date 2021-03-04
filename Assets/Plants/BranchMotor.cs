@@ -27,10 +27,10 @@ namespace PlantAI
         private LeafFactory leafFactory;
 
         private bool haveChilds = false;
-        private float growDelai = 6;
-        private float timeSinceGrow = 0;
+        private float growDelai = 20;
 
         private float accumulatedEnergie = 0;
+        private float growFactor = 0;
 
         void Awake()
         {
@@ -49,33 +49,40 @@ namespace PlantAI
 
         }
 
+        private void Start()
+        {
+            if (branchAnimator)
+                StartCoroutine(growPass());
+        }
+
+
         void Update()
         {
-            float growFactor = (GetGlobalLightExposition() - lightSeuilOfDeath) / energieNeedForGrow;
+            float globalExposition = GetGlobalLightExposition();
+            growFactor = (globalExposition - lightSeuilOfDeath) / energieNeedForGrow;
 
-            if (branchColorMotor)
-                branchColorMotor.UpdateColor();
-
-            timeSinceGrow += Time.deltaTime;
             if (branchAnimator)
-            {
                 branchAnimator.UpdateAnimation(growFactor);
-                if (timeSinceGrow > growDelai)
+            
+
+            if (!haveChilds) {
+                accumulatedEnergie += Mathf.Max(globalExposition - lightSeuilOfDeath, 0);
+                if (accumulatedEnergie > energieForNewBranch)
                 {
-                    timeSinceGrow = 0;
-                    //branchAnimator.Grow(0.0004f * (growFactor * 10 * growDelai / (branchCreatorMotor.generation + 1)));
+                    haveChilds = true;
+                    branchCreatorMotor.CreateNewChildBranch(giveRandomSkeletonPoint());
                 }
             }
-           
 
+        }
 
-           accumulatedEnergie += Mathf.Max(GetGlobalLightExposition() - lightSeuilOfDeath, 0);
-            if (accumulatedEnergie > energieForNewBranch && !haveChilds)
-            {
-                haveChilds = true;
-                branchCreatorMotor.CreateNewChildBranch(giveRandomSkeletonPoint());
-            }
-
+        private IEnumerator growPass()
+        {
+            yield return new WaitForSeconds(growDelai);
+            branchAnimator.Grow(0.0004f * (growFactor * 10 * growDelai / (branchCreatorMotor.generation + 1)));
+            if (branchColorMotor)
+                branchColorMotor.UpdateColor();
+            StartCoroutine(growPass());
         }
 
 

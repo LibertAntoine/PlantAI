@@ -21,7 +21,6 @@ namespace PlantAI
 
         public void UpdateColor()
         {
-     
             _renderer.GetPropertyBlock(_propBlock);
             _propBlock.SetColor("_Color", Color.Lerp(Color1, Color2, branchAnimator.GetSliceRadius(0) * 5f));
             _renderer.SetPropertyBlock(_propBlock);

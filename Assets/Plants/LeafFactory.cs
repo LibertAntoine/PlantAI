@@ -31,11 +31,14 @@ namespace PlantAI
         /// <param name="positionAndNormal">Position (Vector3) and Normal (Vector3).</param>
         public void CreateNewLeaf(Vector3 direction, KeyValuePair<Vector3, Vector3> positionAndNormal, int style = 0)
         {
-            Instantiate(
-                (GameObject)Resources.Load(leafPrefabPath[style], typeof(GameObject)),
-                positionAndNormal.Key,
-                Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value) * Quaternion.FromToRotation(positionAndNormal.Value, transform.InverseTransformDirection(direction)),
-                transform);
+            if (Random.Range(0.0f, 1.0f) < 0.15)
+            {
+                Instantiate(
+                    (GameObject)Resources.Load(leafPrefabPath[style], typeof(GameObject)),
+                    positionAndNormal.Key,
+                    Quaternion.FromToRotation(Vector3.up, positionAndNormal.Value) * Quaternion.FromToRotation(positionAndNormal.Value, transform.InverseTransformDirection(direction)),
+                    transform);
+            }
         }
     }
 }

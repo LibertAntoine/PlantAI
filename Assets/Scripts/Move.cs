@@ -60,6 +60,9 @@ public class Move : MonoBehaviour
         {
             transform.Translate(Vector3.down * Time.deltaTime * speed);
         }*/
+
+        Vector3 newPos = transform.position;
+
         if (Input.GetKey(KeyCode.S)/* && isNotCollidedLEFT*/)
         {
             transform.Translate(Vector3.left * Time.deltaTime * speed);
