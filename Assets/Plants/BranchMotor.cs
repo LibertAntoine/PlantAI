@@ -51,14 +51,15 @@ namespace PlantAI
 
         private void Start()
         {
-            if (branchAnimator)
-                StartCoroutine(growPass());
+            //if (branchAnimator)
+              //  StartCoroutine(growPass());
         }
 
 
         void Update()
         {
             float globalExposition = GetGlobalLightExposition();
+            Debug.Log(globalExposition);
             growFactor = (globalExposition - lightSeuilOfDeath) / energieNeedForGrow;
 
             if (branchAnimator)
