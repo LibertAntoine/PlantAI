@@ -21,37 +21,9 @@ public class Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (contains)
-        {
-            newPos = transform.position;
-        }
-
-<<<<<<< Updated upstream
-        /*if(transform.eulerAngles.y != lastRotation)
-        {
-            isNotCollidedLEFT = true;
-            isNotCollidedRIGHT = true;
-            isNotCollidedFORWARD = true;
-            isNotCollidedBACK = true;
-        }*/
-
-        //remove the /**/ to allow up and down.
-        /*if (Input.GetKey(KeyCode.UpArrow))
-        {
-            transform.Translate(Vector3.up * Time.deltaTime * speed);
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            transform.Translate(Vector3.down * Time.deltaTime * speed);
-        }*/
-
         Vector3 newPos = transform.position;
 
-        if (Input.GetKey(KeyCode.S)/* && isNotCollidedLEFT*/)
-=======
         if (Input.GetKey(KeyCode.S))
->>>>>>> Stashed changes
         {
             newPos += transform.TransformDirection(Vector3.left) * Time.deltaTime * speed;         
         }
