@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ParentLeaf
   - Obstacle
+  - ObstacleCamera
   layers:
   - Default
   - TransparentFX
