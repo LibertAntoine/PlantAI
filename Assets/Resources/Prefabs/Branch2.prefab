@@ -907,9 +907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea88dce86f406a48bcaf59796a5534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightSeuilOfDeath: 200000
-  energieNeedForGrow: 200000
-  energieForNewBranch: 300000000
+  lightSeuilOfDeath: 6500
+  energieNeedForGrow: 25000
+  energieForNewBranch: 30000000
   leafStyle: 1
 --- !u!114 &1337405566
 MonoBehaviour:

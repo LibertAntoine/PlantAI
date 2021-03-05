@@ -51,8 +51,8 @@ namespace PlantAI
 
         private void Start()
         {
-            //if (branchAnimator)
-              //  StartCoroutine(growPass());
+            if (branchAnimator)
+                StartCoroutine(growPass());
         }
 
 
@@ -80,7 +80,7 @@ namespace PlantAI
         private IEnumerator growPass()
         {
             yield return new WaitForSeconds(growDelai);
-            branchAnimator.Grow(0.0004f * (growFactor * 10 * growDelai / (branchCreatorMotor.generation + 1)));
+            branchAnimator.Grow(0.0001f * (growFactor * 10 * growDelai / (branchCreatorMotor.generation + 1)));
             if (branchColorMotor)
                 branchColorMotor.UpdateColor();
             StartCoroutine(growPass());

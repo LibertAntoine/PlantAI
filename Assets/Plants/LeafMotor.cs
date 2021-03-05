@@ -6,7 +6,7 @@ namespace PlantAI
 {
     public class LeafMotor : MonoBehaviour
     {
-        public float finalScale = 5;
+        public float finalScale = 20;
         private bool isMature = false;
 
         // Start is called before the first frame update
