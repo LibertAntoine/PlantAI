@@ -474,6 +474,8 @@ namespace PlantAI
 
                     // Set the new direction.
                     direction = outsidePoint - transform.TransformPoint(GetCenterExtrudablePosition());
+                    direction = transform.InverseTransformDirection(direction);
+                    direction.Normalize();
                 }
             }
 
