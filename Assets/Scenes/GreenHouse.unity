@@ -6782,13 +6782,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: -0.12549351, y: -0.25662535, z: -0.03362588, w: 0.95773906}
   m_LocalPosition: {x: -67.166626, y: 182.86336, z: -3.329834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: -14.93, y: -30, z: 0}
 --- !u!1001 &714963746
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11230,7 +11230,7 @@ GameObject:
   - component: {fileID: 1288794014}
   - component: {fileID: 1288794013}
   - component: {fileID: 1288794012}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15440,7 +15440,7 @@ GameObject:
   - component: {fileID: 1765561062}
   - component: {fileID: 1765561061}
   - component: {fileID: 1765561060}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15796,7 +15796,7 @@ GameObject:
   - component: {fileID: 1807460421}
   - component: {fileID: 1807460420}
   - component: {fileID: 1807460419}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16649,7 +16649,7 @@ GameObject:
   - component: {fileID: 1913948535}
   - component: {fileID: 1913948534}
   - component: {fileID: 1913948533}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16742,7 +16742,7 @@ GameObject:
   - component: {fileID: 1917329358}
   - component: {fileID: 1917329357}
   - component: {fileID: 1917329356}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
