@@ -59,7 +59,7 @@ namespace PlantAI
         void Update()
         {
             float globalExposition = GetGlobalLightExposition();
-            Debug.Log(globalExposition);
+            //Debug.Log(globalExposition);
             growFactor = (globalExposition - lightSeuilOfDeath) / energieNeedForGrow;
 
             if (branchAnimator)

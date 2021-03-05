@@ -17,23 +17,29 @@ public class OpacityRoof : MonoBehaviour
     // Update is called once per frame
     void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0) && opacity <= 1)
-        {   if(opacity >= 1 - 2*increment)
+        if (Input.GetMouseButtonDown(0) && opacity < 1)
+        {   if(opacity >= 1 - increment)
             {
                 this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, 1));
+            } else
+            {
+                opacity = this.GetComponent<Renderer>().material.GetColor("_Color").a + increment;
+                this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, opacity));
             }
-            opacity = this.GetComponent<Renderer>().material.GetColor("_Color").a + increment;
-            this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, opacity));
+
         }
 
-        else if (Input.GetMouseButtonDown(1) && opacity >= 0)
+        else if (Input.GetMouseButtonDown(1) && opacity > 0)
         {
-            if (opacity <= 2*increment)
+            if (opacity <= increment)
             {
                 this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, 0));
+            } else
+            {
+                opacity = this.GetComponent<Renderer>().material.GetColor("_Color").a - increment;
+                this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, opacity));
             }
-            opacity = this.GetComponent<Renderer>().material.GetColor("_Color").a - increment;
-            this.GetComponent<Renderer>().material.SetColor("_Color", new Color(1, 1, 1, opacity));
+
         }
     }
 }

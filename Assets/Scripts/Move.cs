@@ -47,8 +47,6 @@ public class Move : MonoBehaviour
             if (collidObject.GetComponent<Collider>().bounds.Contains(newPos))
             {
                 contains = true;
-                Debug.Log(newPos);
-
             }
         }
 
