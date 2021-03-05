@@ -7,23 +7,23 @@ public class LightController : MonoBehaviour
 
     public bool on = true;
 
-    private Light light;
+    private Light spotLight;
     private GameObject mask;
 
 
 
     void Start()
     {
-        light = GetComponentInChildren<Light>();
+        spotLight = GetComponentInChildren<Light>();
         mask = transform.Find("Mask").gameObject;
         if(on)
         {
-            light.enabled = true;
+            spotLight.enabled = true;
             mask.SetActive(false);
         }
         else
         {
-            light.enabled = false;
+            spotLight.enabled = false;
             mask.SetActive(true);
         }
     }
@@ -32,8 +32,8 @@ public class LightController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            light.enabled = !light.enabled;
-            mask.SetActive((light.enabled) ? false : true); 
+            spotLight.enabled = !spotLight.enabled;
+            mask.SetActive((spotLight.enabled) ? false : true); 
         }
     }
 }

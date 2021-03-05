@@ -8,6 +8,7 @@ public class OpenCloseWindow : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 0;
         welcomePanel = GetComponent<Canvas>();
     }
 
@@ -16,6 +17,7 @@ public class OpenCloseWindow : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H))
         {
             welcomePanel.enabled = !welcomePanel.enabled;
+            Time.timeScale = (welcomePanel.enabled == true) ? 0 : 1;
         }
     }
 }
