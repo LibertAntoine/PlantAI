@@ -75,6 +75,11 @@ namespace PlantAI
                 }
             }
 
+            if (Input.GetKeyDown("escape"))
+            {
+                Application.Quit();
+            }
+
         }
 
         private IEnumerator growPass()

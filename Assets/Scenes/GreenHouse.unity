@@ -11524,7 +11524,9 @@ MonoBehaviour:
     Scroll to vary the intensity of your flashlight.
 
     - Press H to open/close
-    this window.'
+    this window.
+
+    - Press Escape to quit the application.'
 --- !u!222 &1309129006
 CanvasRenderer:
   m_ObjectHideFlags: 0
